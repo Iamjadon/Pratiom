@@ -1,0 +1,42 @@
+.parent {
+    height: 100vh;  /* Full viewport height */
+    display: flex;
+    justify-content: center;  /* Center horizontally */
+    align-items: center;      /* Center vertically */
+    background-color: #f4f4f4;
+  }
+  
+  .login-form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  #logo-container h3 {
+    font-weight: bold;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  input[type="text"], input[type="password"] {
+    height: 40px;
+    font-size: 16px;
+  }
+  
+  .btn {
+    font-size: 18px;
+    padding: 10px;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn:hover {
+    background-color: #0056b3;
+  }

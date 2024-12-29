@@ -1,0 +1,21 @@
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100% !important;
+    height: 100% !important;
+  }
+  
+  .content {
+    margin-left: 250px; /* This pushes the content to the right, allowing for sidenav */
+    padding-top: 60px; /* Adjusting for header height */
+    padding-left: 20px;
+    padding-right: 20px;
+    height: calc(100vh - 120px); /* 100vh minus the header and footer heights */
+    overflow-y: auto; /* Enables scrolling if content overflows */
+  }
+  
+  h1 {
+    text-align: center; /* Center the "I am Abhi" text */
+  }
+  

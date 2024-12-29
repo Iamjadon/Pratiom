@@ -1,0 +1,26 @@
+<div class="parent">
+    <div class="container">
+      <div class="row justify-content-center align-items-center">
+        <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+          <div class="login-form">
+            <div id="logo-container" class="text-center">
+              <h3>Login</h3>
+            </div>
+            <form id="loginForm">
+              <div class="form-group input-group mb-3">
+                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                <input class="form-control" type="text" [(ngModel)]="loginObj.username" name="username" placeholder="Username" required/>
+              </div>
+              <div class="form-group input-group mb-3">
+                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                <input class="form-control" type="password"  [(ngModel)]="loginObj.password" name="password" placeholder="Password" required/>
+              </div>
+              <div class="form-group">
+                <button type="button" (click)="onLogin()" class="btn btn-primary btn-block w-100">Login</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

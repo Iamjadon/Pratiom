@@ -1,0 +1,97 @@
+
+mat-dialog-title {
+    font-size: 1.8rem; 
+    font-weight: bold; 
+    color: #333; 
+    margin-bottom: 20px; 
+}
+
+
+.instructions {
+  margin-bottom: 1.5rem; 
+  font-size: 1.1rem;
+  color: #555; 
+}
+
+.instructions ul {
+  list-style-type: disc;
+  margin-left: 20px;
+}
+
+.instructions li {
+  margin-bottom: 8px; 
+}
+
+
+.form-container {
+  display: flex; 
+  flex-direction: column; 
+  gap: 1.5rem; 
+  padding: 0 20px; 
+}
+
+
+.form-label {
+  font-size: 1.1rem; 
+  font-weight: 600; 
+  margin-bottom: 8px; 
+}
+
+
+.form-control {
+  font-size: 1.1rem; 
+  padding: 12px;
+  border-radius: 5px; 
+  border: 1px solid #ccc; 
+  width: 100%; 
+}
+
+.mat-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem; 
+  padding: 15px 20px; 
+}
+
+
+button.mat-button {
+  font-weight: 600; 
+  padding: 12px 20px; 
+  border-radius: 5px; 
+  font-size: 1.1rem;
+  transition: background-color 0.3s, transform 0.2s ease; 
+}
+
+
+button.btn-secondary {
+  background-color: #6c757d; 
+  color: #fff;
+  border: none; 
+}
+
+button.btn-secondary:hover {
+  background-color: #5a6268;
+  transform: scale(1.05); 
+}
+
+
+button.btn-primary {
+  background-color: #007bff;
+  color: #fff; 
+  /* border: 4px solid red !important; Remove border */
+}
+
+button.btn-primary:hover {
+  background-color: #0056b3; 
+  transform: scale(1.05);
+}
+
+
+.mat-dialog-container {
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+}
+
+.mat-dialog-content {
+  padding: 20px;
+}
