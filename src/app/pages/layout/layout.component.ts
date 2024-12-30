@@ -9,29 +9,27 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterOutlet } from '@angular/router';
-import { UpdatePriceModalComponent } from '../update-price-modal/update-price-modal.component';
-import { SearchsaleregisterComponent } from '../searchsaleregister/searchsaleregister.component'; 
-
+import { UpdatePriceModalComponent } from '../../component/update-price-modal/update-price-modal.component';
+import { SearchsaleregisterComponent } from '../../component/searchsaleregister/searchsaleregister.component'; 
 
 
 @Component({
-  selector: 'app-header',
+  selector: 'app-layout',
   standalone: true,
   imports: [RouterOutlet, MatToolbarModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatButtonModule,
-    MatListModule,
-    MatButtonModule,
-    MatListModule,
-    MatExpansionModule,
-    MatMenuModule,
-   ],
-    templateUrl: './header.component.html',
-    styleUrls: ['./header.component.css']
+      MatIconModule,
+      MatSidenavModule,
+      MatButtonModule,
+      MatListModule,
+      MatButtonModule,
+      MatListModule,
+      MatExpansionModule,
+      MatMenuModule,],
+  templateUrl: './layout.component.html',
+  styleUrl: './layout.component.css'
 })
-export class HeaderComponent {
-  constructor(private dialog: MatDialog) {}
+export class LayoutComponent {
+constructor(private dialog: MatDialog) {}
 
   openUpdateGoldRateDialog(): void {
     this.dialog.open(UpdatePriceModalComponent, {
@@ -47,7 +45,4 @@ export class HeaderComponent {
       width: '500px'
     });
   }
-  
 }
-
-

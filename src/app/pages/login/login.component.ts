@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [FormsModule, HttpClientModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']  // Corrected styleUrls property
+  styleUrls: ['./login.component.css']  
 })
 export class LoginComponent {
   loginObj: any = {

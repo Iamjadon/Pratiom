@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
+import { MatDialogModule } from '@angular/material/dialog';
 import { RouterOutlet } from '@angular/router';
-import { FooterComponent } from './component/footer/footer.component'; 
-import { HeaderComponent } from './component/header/header.component'; 
-import { MatDialogModule } from '@angular/material/dialog'; 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,HeaderComponent,FooterComponent,MatDialogModule],
+  imports: [RouterOutlet,MatDialogModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -15,6 +13,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 
 export class AppComponent {
   title = 'pratiomJew';
+  
 }
 
 
