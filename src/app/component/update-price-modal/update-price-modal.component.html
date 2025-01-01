@@ -1,0 +1,27 @@
+<h2 mat-dialog-title class="text-center">Update Gold and Silver Prices</h2>
+
+<mat-dialog-content>
+  <div class="instructions">
+    <ul>
+      <li>Enter the current Gold price in INR.</li>
+      <li>Enter the current Silver price in INR.</li>
+    </ul>
+  </div>
+  
+  <form class="form-container" (ngSubmit)="onSubmit()">
+    
+    <div class="form-group">
+      <label for="goldPrice" class="form-label">Gold Price</label>
+      <input type="text" id="goldPrice" class="form-control" [(ngModel)]="goldPrice" name="goldPrice" placeholder="Enter Gold Price" required>
+    </div>
+
+    <div class="form-group">
+      <label for="silverPrice" class="form-label">Silver Price</label>
+      <input type="text" id="silverPrice" class="form-control" [(ngModel)]="silverPrice" name="silverPrice" placeholder="Enter Silver Price" required>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions class="text-right">
+  <button mat-button class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+  <button mat-button class="btn btn-primary" [disabled]="!goldPrice || !silverPrice" cdkFocusInitial>Submit</button>
+</mat-dialog-actions>
