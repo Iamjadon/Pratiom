@@ -1,0 +1,57 @@
+<div class="main">
+  <div
+    class="box d-flex flex-wrap col-12 col-md-10 shadow p-2 mb-5 bg-white rounded mx-auto"
+  >
+    <div class="col-12 col-md-5 text-center mb-3 mb-md-0">
+      <img src="login.png" class="card_img img-fluid rounded" alt="..." />
+    </div>
+    <div class="col-12 col-md-6">
+      <div class="card-body">
+        <form>
+          <h1 class="mt-4">Hello,<br />Welcome Back</h1>
+          <p class="mt-4 login">Hey,Welcome back to your sepical place</p>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Username</label>
+            <input
+              type="text"
+              name="EmailId"
+              [(ngModel)]="loginObj.EmailId"
+              class="form-control user"
+              id="exampleInputEmail1"
+              aria-describedby="username"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label"
+              >Password</label
+            >
+            <input
+              type="password"
+              name="Password"
+              [(ngModel)]="loginObj.Password"
+              class="form-control user"
+              id="exampleInputPassword1"
+            />
+          </div>
+          <div class="mb-3 form-check">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="exampleCheck1"
+            />
+            <label class="form-check-label" for="exampleCheck1"
+              >Remember Me</label
+            >
+          </div>
+          <button
+            (click)="onLogin()"
+            type="submit"
+            class="btn btn-primary w-100"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
