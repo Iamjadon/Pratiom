@@ -1,119 +1,159 @@
 <div class="container-fluid sales-register">
-    <!-- User Details Section -->
-    <div class="section user-details">
-      <h3 class="section-title">Party Details / Invoices</h3>
-      <div class="row">
-        <div class="col-md-6">
-          <label>Party Name</label>
-          <input type="text" class="form-control" placeholder="Enter party name" />
-        </div>
-        <div class="col-md-6">
-          <label>Address</label>
-          <input type="text" class="form-control" placeholder="Enter address" />
-        </div>
+  <div class="section user-details">
+    <h3 class="section-title">Party Details / Invoices</h3>
+    <div class="row">
+      <div class="col-md-6">
+        <label>Party Name</label>
+        <input type="text" class="form-control" placeholder="Enter party name" />
       </div>
-      <div class="row mt-3">
-        <div class="col-md-4">
-          <label>Mobile</label>
-          <input type="text" class="form-control" placeholder="Enter mobile number" />
-        </div>
-        <div class="col-md-4">
-          <label>Phone No.</label>
-          <input type="text" class="form-control" placeholder="Enter phone number" />
-        </div>
-        <div class="col-md-4">
-          <label>Email</label>
-          <input type="email" class="form-control" placeholder="Enter email" />
-        </div>
+      <div class="col-md-6">
+        <label>Address</label>
+        <input type="text" class="form-control" placeholder="Enter address" />
       </div>
-      <div class="row mt-3">
-        <div class="col-md-4">
-          <label>Invoice No.</label>
-          <input type="text" class="form-control" placeholder="#PR" />
-        </div>
-        <div class="col-md-4">
-          <label>GST No.</label>
-          <input type="text" class="form-control" placeholder="Enter GST number" />
-        </div>
-        <div class="col-md-4">
-            <label>Invoice Date</label>
-            <div class="invoice-date-container">
-              <input
-                matInput
-                class="form-control"
-                [matDatepicker]="picker"
-                placeholder="Select Date"
-              />
-              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
-            </div>
-          </div>
-          
     </div>
-  
-    <!-- Separator -->
-    <hr />
-  
-    <!-- Item Details Section -->
-    <div class="section item-details">
-      <h3 class="section-title">Item Details</h3>
-      <div class="row">
-        <div class="col-md-4">
-          <label>Type</label>
-          <select class="form-control">
-            <option value="" disabled selected>Select Type</option>
-            <option value="gold">Gold</option>
-            <option value="silver">Silver</option>
-          </select>
-        </div>
-        <div class="col-md-4">
-          <label>Item Name</label>
-          <select class="form-control">
-            <option value="" disabled selected>Select Item</option>
-            <option value="ring">Ring</option>
-            <option value="chain">Chain</option>
-          </select>
-        </div>
-        <div class="col-md-4">
-          <label>Qty</label>
-          <input type="number" class="form-control" placeholder="Enter quantity" />
-        </div>
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <label>Mobile</label>
+        <input type="text" class="form-control" placeholder="Enter mobile number" />
       </div>
-      <div class="row mt-3">
-        <div class="col-md-4">
-          <label>Weight (gm)</label>
-          <input type="text" class="form-control" placeholder="Enter weight" />
-        </div>
-        <div class="col-md-4">
-          <label>Product Price</label>
-          <input type="text" class="form-control" placeholder="Enter price" />
-        </div>
-        <div class="col-md-4">
-          <label>Discount</label>
-          <input type="text" class="form-control" placeholder="Enter discount" />
-        </div>
+      <div class="col-md-4">
+        <label>Phone No.</label>
+        <input type="text" class="form-control" placeholder="Enter phone number" />
       </div>
-      <div class="row mt-3">
-        <div class="col-md-4">
-          <label>SGST</label>
-          <input type="text" class="form-control" placeholder="Enter SGST" />
-        </div>
-        <div class="col-md-4">
-          <label>CGST</label>
-          <input type="text" class="form-control" placeholder="Enter CGST" />
-        </div>
-        <div class="col-md-4">
-          <label>Total Value</label>
-          <input type="text" class="form-control" placeholder="Enter total value" />
-        </div>
+      <div class="col-md-4">
+        <label>Email</label>
+        <input type="email" class="form-control" placeholder="Enter email" />
       </div>
-      <div class="row mt-4">
-        <div class="col-md-12 text-right">
-          <button class="btn btn-success">Save</button>
-          <button class="btn btn-warning">Print</button>
-  
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <label>Invoice No.</label>
+        <input type="text" class="form-control" placeholder="#PR" />
+      </div>
+      <div class="col-md-4">
+        <label>GST No.</label>
+        <input type="text" class="form-control" placeholder="Enter GST number" />
+      </div>
+      <div class="col-md-4">
+        <label>Invoice Date</label>
+        <div class="invoice-date-container">
+          <input matInput class="form-control" [matDatepicker]="picker" placeholder="Select Date" />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
         </div>
       </div>
     </div>
   </div>
+  <hr />
+
+   <div class="section item-details">
+    <h3 class="section-title">Item Details</h3>
+
+    <div class="row item-row">
+      <div class="col-md-4">
+        <label>Type</label>
+        <select class="form-control" [(ngModel)]="newItem.type">
+          <option value="" disabled>Select Type</option>
+          <option value="gold">Gold</option>
+          <option value="silver">Silver</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label>Item Name</label>
+        <select class="form-control" [(ngModel)]="newItem.name">
+          <option value="" disabled>Select Item</option>
+          <option value="ring">Ring</option>
+          <option value="chain">Chain</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label>Qty</label>
+        <input type="number" class="form-control" [(ngModel)]="newItem.qty" (input)="calculateTotal()"/>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <label>Weight (gm)</label>
+        <input type="text" class="form-control" [(ngModel)]="newItem.weight" (input)="calculateTotal()"/>
+      </div>
+      <div class="col-md-4">
+        <label>Product Price</label>
+        <input type="text" class="form-control" [(ngModel)]="newItem.price" (input)="calculateTotal()"/>
+      </div>
+      <div class="col-md-4">
+        <label>Discount</label>
+        <input type="text" class="form-control" [(ngModel)]="newItem.discount" (input)="calculateTotal()"/>
+      </div>
+    </div>
+
+    <div class="col-md-12 text-right mt-3">
+      <button class="btn btn-primary" (click)="addItem()">Add Item</button>
+    </div>
+  </div>
   
+  <div class="section table-section">
+    <h3 class="section-title">Items Table</h3>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Invoice No</th>
+          <th>Party Name</th>
+          <th>Item Name</th>
+          <th>Qty</th>
+          <th>Weight</th>
+          <th>Product Price</th>
+          <th>Discount</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items">
+          <td>{{ invoiceNo }}</td>
+          <td>{{ partyName }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.qty }}</td>
+          <td>{{ item.weight }}</td>
+          <td>{{ item.price }}</td>
+          <td>{{ item.discount }}</td>
+          <td>{{ item.total }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="section bill-summary">
+    <h3 class="section-title">Bill Summary</h3>
+    <div class="row">
+      <div class="col-md-6">
+        <label>Total Amount</label>
+        <input type="text" class="form-control" [value]="totalBill" readonly />
+      </div>
+      <div class="col-md-6">
+        <label>Discount</label>
+        <input type="text" class="form-control" [value]="discount" readonly />
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-6">
+        <label>SGST</label>
+        <input type="text" class="form-control" [value]="sgst" readonly />
+      </div>
+      <div class="col-md-6">
+        <label>CGST</label>
+        <input type="text" class="form-control" [value]="cgst" readonly />
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-12">
+        <h4>Total Payable: {{ totalBill | currency }}</h4>
+      </div>
+    </div>
+  </div>
+  
+  <div class="section payment-details">
+    <!-- Payment details fields here -->
+  </div>
+</div>
+
+
