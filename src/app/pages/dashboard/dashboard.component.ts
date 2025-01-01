@@ -18,7 +18,7 @@ export class DashboardComponent implements AfterViewInit {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    public dialog: MatDialog // Inject MatDialog to open modals
+    public dialog: MatDialog
   ) {}
 
   // Open the modal when the "Get Update Gold Rate" is clicked
@@ -26,8 +26,8 @@ export class DashboardComponent implements AfterViewInit {
     const dialogRef = this.dialog.open(UpdatePriceModalComponent, {
       width: '300px',
       data: {
-        goldPrice: 60000,   // Example data to pass
-        silverPrice: 750    // Example data to pass
+        goldPrice: 60000,  
+        silverPrice: 750    
       }
     });
 
