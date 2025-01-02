@@ -19,9 +19,10 @@
       <label for="silverPrice" class="form-label">Silver Price</label>
       <input type="text" id="silverPrice" class="form-control" [(ngModel)]="silverPrice" name="silverPrice" placeholder="Enter Silver Price" required>
     </div>
+    <mat-dialog-actions class="text-right">
+      <button mat-button class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+      <button mat-button class="btn btn-primary" [disabled]="!goldPrice || !silverPrice" cdkFocusInitial>Submit</button>
+    </mat-dialog-actions>
   </form>
 </mat-dialog-content>
-<mat-dialog-actions class="text-right">
-  <button mat-button class="btn btn-secondary" (click)="onCancel()">Cancel</button>
-  <button mat-button class="btn btn-primary" [disabled]="!goldPrice || !silverPrice" cdkFocusInitial>Submit</button>
-</mat-dialog-actions>
+
