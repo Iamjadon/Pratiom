@@ -5,6 +5,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import Chart from 'chart.js/auto';
 import { UpdatePriceModalComponent } from '../../component/update-price-modal/update-price-modal.component';
+import { ApiService } from '../../services/api-service';
+import { metalprice } from '../../models/metalprice.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,11 +17,32 @@ import { UpdatePriceModalComponent } from '../../component/update-price-modal/up
 })
 export class DashboardComponent implements AfterViewInit {
   private chart: Chart | undefined;
+  goldPrice: number = 0;
+  silverPrice: number = 0;
+  yesterdayGoldPrice: number = 0;
+  yesterdaySilverPrice: number = 0;
 
   constructor(
+    private apiService: ApiService, 
     @Inject(PLATFORM_ID) private platformId: Object,
     public dialog: MatDialog
   ) {}
+
+
+  ngOnInit() {
+    this.apiService.getemetalprice().subscribe({
+      next: (data: metalprice) => {
+        this.goldPrice = data.todayGoldPrice; 
+        this.silverPrice = data.todaySilverPrice;  
+        this.yesterdayGoldPrice = data.yesterdayGoldPrice; 
+        this.yesterdaySilverPrice = data.yesterdaySilverPrice;  
+      },
+      error: (err) => {
+        console.error('Error fetching metal prices:', err);
+      }
+    });
+  }
+
 
   // Open the modal when the "Get Update Gold Rate" is clicked
   openUpdateGoldRateDialog(): void {
