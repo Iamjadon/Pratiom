@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { ApiService } from '../../services/api-service';
-import { LoginRequest } from '../../models/login.model';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { LoginRequest } from '../../models/login.model';
+import { ApiService } from '../../services/api-service';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +18,11 @@ export class LoginComponent {
     username: '',
     password: ''
   };
+  imageList: string[] = [
+    '/images/loginImages.jpg',
+    'assets/images/login.png', 
+  ];
+  
 
   constructor(private apiService: ApiService, private router: Router) {}
 
