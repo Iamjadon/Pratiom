@@ -4,7 +4,11 @@
     <div class="row">
       <div class="col-md-6">
         <label>Party Name</label>
-        <input type="text" class="form-control" placeholder="Enter party name" />
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Enter party name"
+        />
       </div>
       <div class="col-md-6">
         <label>Address</label>
@@ -14,11 +18,19 @@
     <div class="row mt-3">
       <div class="col-md-4">
         <label>Mobile</label>
-        <input type="text" class="form-control" placeholder="Enter mobile number" />
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Enter mobile number"
+        />
       </div>
       <div class="col-md-4">
         <label>Phone No.</label>
-        <input type="text" class="form-control" placeholder="Enter phone number" />
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Enter phone number"
+        />
       </div>
       <div class="col-md-4">
         <label>Email</label>
@@ -27,18 +39,51 @@
     </div>
     <div class="row mt-3">
       <div class="col-md-4">
+        <label>GST No.</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Enter GST number"
+        />
+      </div>
+      <div class="col-md-4">
+        <label>Id Type</label>
+        <input type="text" class="form-control" placeholder="Id Type" />
+      </div>
+      <div class="col-md-4">
+        <label>Id No.</label>
+        <input type="text" class="form-control" placeholder="Id No." />
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-4">
         <label>Invoice No.</label>
         <input type="text" class="form-control" placeholder="#PR" />
       </div>
+
       <div class="col-md-4">
-        <label>GST No.</label>
-        <input type="text" class="form-control" placeholder="Enter GST number" />
+        <label>Pay</label>
+        <select class="form-control" [(ngModel)]="newItem.type">
+          <option value="" disabled>Select Type</option>
+          <option value="PhonePe">PhonePe</option>
+          <option value="GooglePay">GooglePay</option>
+          <option value="Paytm">Paytm</option>
+          <option value="DebitCard">DebitCard</option>
+        </select>
       </div>
       <div class="col-md-4">
         <label>Invoice Date</label>
         <div class="invoice-date-container">
-          <input matInput class="form-control" [matDatepicker]="picker" placeholder="Select Date" />
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <input
+            matInput
+            class="form-control"
+            [matDatepicker]="picker"
+            placeholder="Select Date"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </div>
       </div>
@@ -46,7 +91,7 @@
   </div>
   <hr />
 
-   <div class="section item-details">
+  <div class="section item-details">
     <h3 class="section-title">Item Details</h3>
 
     <div class="row item-row">
@@ -58,6 +103,7 @@
           <option value="silver">Silver</option>
         </select>
       </div>
+
       <div class="col-md-4">
         <label>Item Name</label>
         <select class="form-control" [(ngModel)]="newItem.name">
@@ -68,22 +114,100 @@
       </div>
       <div class="col-md-4">
         <label>Qty</label>
-        <input type="number" class="form-control" [(ngModel)]="newItem.qty" (input)="calculateTotal()"/>
+        <input
+          type="number"
+          class="form-control"
+          [(ngModel)]="newItem.qty"
+          (input)="calculateTotal()"
+        />
       </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <label>Karat</label>
+        <select class="form-control" [(ngModel)]="newItem.Karat">
+          <option value="" disabled>Select Type</option>
+          <option value="0K">0K</option>
+          <option value="18K">18K</option>
+          <option value="20K">20K</option>
+          <option value="22K">22K</option>
+          <option value="24K">24K</option>
+        </select>
+      </div>
       <div class="col-md-4">
         <label>Weight (gm)</label>
-        <input type="text" class="form-control" [(ngModel)]="newItem.weight" (input)="calculateTotal()"/>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="newItem.weight"
+          (input)="calculateTotal()"
+        />
+      </div>
+      <div class="col-md-4">
+        <label>Stone</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="newItem.Stone"
+          (input)="calculateTotal()"
+        />
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <label>Stone Amt</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="newItem.StoneAmt"
+          (input)="calculateTotal()"
+        />
+      </div>
+      <div class="col-md-4">
+        <label>Net Metal</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="newItem.NetMetal"
+          (input)="calculateTotal()"
+        />
       </div>
       <div class="col-md-4">
         <label>Product Price</label>
-        <input type="text" class="form-control" [(ngModel)]="newItem.price" (input)="calculateTotal()"/>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="newItem.price"
+          (input)="calculateTotal()"
+        />
       </div>
+    </div>
+    <div class="row mt-3">
       <div class="col-md-4">
         <label>Discount</label>
-        <input type="text" class="form-control" [(ngModel)]="newItem.discount" (input)="calculateTotal()"/>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="newItem.discount"
+          (input)="calculateTotal()"
+        />
+      </div>
+      <div class="col-md-4">
+        <label>SGST</label>
+        <input type="text" class="form-control" [value]="sgst" readonly />
+      </div>
+      <div class="col-md-4">
+        <label>CGST</label>
+        <input type="text" class="form-control" [value]="cgst" readonly />
+      </div>
+      <div class="col-md-4">
+        <label>Total Value</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="newItem.totalvalue"
+        />
       </div>
     </div>
 
@@ -91,7 +215,7 @@
       <button class="btn btn-primary" (click)="addItem()">Add Item</button>
     </div>
   </div>
-  
+
   <div class="section table-section">
     <h3 class="section-title">Items Table</h3>
     <table class="table table-bordered">
@@ -121,7 +245,7 @@
       </tbody>
     </table>
   </div>
-  
+
   <div class="section bill-summary">
     <h3 class="section-title">Bill Summary</h3>
     <div class="row">
@@ -150,10 +274,8 @@
       </div>
     </div>
   </div>
-  
+
   <div class="section payment-details">
     <!-- Payment details fields here -->
   </div>
 </div>
-
-
