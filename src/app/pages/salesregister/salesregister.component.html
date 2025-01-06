@@ -8,6 +8,7 @@
           type="text"
           class="form-control"
           placeholder="Enter party name"
+          [(ngModel)]="partyName"
         />
       </div>
       <div class="col-md-6">
@@ -24,17 +25,34 @@
           placeholder="Enter mobile number"
         />
       </div>
-      <div class="col-md-4">
+      <!-- <div class="col-md-4">
         <label>Phone No.</label>
         <input
           type="text"
           class="form-control"
           placeholder="Enter phone number"
         />
-      </div>
+      </div> -->
+   
       <div class="col-md-4">
         <label>Email</label>
         <input type="email" class="form-control" placeholder="Enter email" />
+      </div>
+      <div class="col-md-4">
+        <label>Invoice Date</label>
+        <div class="invoice-date-container">
+          <input
+            matInput
+            class="form-control"
+            [matDatepicker]="picker"
+            placeholder="Select Date"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </div>
       </div>
     </div>
     <div class="row mt-3">
@@ -71,22 +89,7 @@
           <option value="DebitCard">DebitCard</option>
         </select>
       </div>
-      <div class="col-md-4">
-        <label>Invoice Date</label>
-        <div class="invoice-date-container">
-          <input
-            matInput
-            class="form-control"
-            [matDatepicker]="picker"
-            placeholder="Select Date"
-          />
-          <mat-datepicker-toggle
-            matSuffix
-            [for]="picker"
-          ></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </div>
-      </div>
+     
     </div>
   </div>
   <hr />
@@ -104,7 +107,7 @@
         </select>
       </div>
 
-      <div class="col-md-4">
+      <div class="col-md-4 ">
         <label>Item Name</label>
         <select class="form-control" [(ngModel)]="newItem.name">
           <option value="" disabled>Select Item</option>
@@ -124,9 +127,9 @@
     </div>
 
     <div class="row mt-3">
-      <div class="col-md-4">
+      <div class="col-md-4 ">
         <label>Karat</label>
-        <select class="form-control" [(ngModel)]="newItem.Karat">
+        <select class="form-control " [(ngModel)]="newItem.Karat">
           <option value="" disabled>Select Type</option>
           <option value="0K">0K</option>
           <option value="18K">18K</option>
@@ -216,13 +219,13 @@
     </div>
   </div>
 
-  <div class="section table-section">
+  <div class="section table-section" *ngIf="showTable">
     <h3 class="section-title">Items Table</h3>
     <table class="table table-bordered">
       <thead>
         <tr>
           <th>Invoice No</th>
-          <th>Party Name</th>
+          <th>Customer Name</th>
           <th>Item Name</th>
           <th>Qty</th>
           <th>Weight</th>
@@ -244,6 +247,9 @@
         </tr>
       </tbody>
     </table>
+    <div class="col-md-12 text-right mt-3">
+      <button class="btn btn-secondary" (click)="printBill()">Print Invoice</button>
+    </div>
   </div>
 
   <div class="section bill-summary">
