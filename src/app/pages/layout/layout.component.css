@@ -68,4 +68,8 @@ html, body {
   button.mat-icon-button {
     margin-left: 10px;
   }
+  mat-list-item {
+    display: block;
+    pointer-events: auto;
+  }
   

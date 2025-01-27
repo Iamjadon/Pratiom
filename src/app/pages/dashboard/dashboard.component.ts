@@ -5,8 +5,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import Chart from 'chart.js/auto';
 import { UpdatePriceModalComponent } from '../../component/update-price-modal/update-price-modal.component';
-import { ApiService } from '../../services/api-service';
 import { metalprice } from '../../models/metalprice.model';
+import { ApiService } from '../../services/api-service';
 
 @Component({
   selector: 'app-dashboard',

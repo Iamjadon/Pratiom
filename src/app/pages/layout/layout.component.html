@@ -16,9 +16,10 @@
       <button mat-menu-item>
         <mat-icon>person</mat-icon> Profile
       </button>
-      <button mat-menu-item>
+      <button mat-menu-item (click)="logout()">
         <mat-icon>logout</mat-icon> Logout
       </button>
+      
     </mat-menu>
   </mat-toolbar>
 
@@ -26,7 +27,7 @@
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #sidenav mode="side" opened>
       <mat-nav-list>
-        <a mat-list-item routerLink="/dashboard">
+        <a mat-list-item  routerLink="/home/dashboard" (click)="navigateTodashboard()">
           <mat-icon>dashboard</mat-icon> Dashboard
         </a>
 
@@ -44,7 +45,7 @@
           <mat-expansion-panel-header>
             <mat-icon>sync_alt</mat-icon> Transactions
           </mat-expansion-panel-header>
-          <a mat-list-item routerLink="salesregister">Sales Register</a>
+          <a mat-list-item routerLink="/home/salesregister" (click)="navigateToSalesRegister()">Sales Register</a>
           <a mat-list-item (click)="openSearchSalesRegister()">Search Sales Register</a>
         </mat-expansion-panel>
 
@@ -57,7 +58,7 @@
           <a mat-list-item routerLink="/party-report">Party Wise Report</a>
         </mat-expansion-panel>
 
-        <a mat-list-item routerLink="/gst">
+        <a mat-list-item routerLink="/gst" (click)="navigateToGst()">
           <mat-icon>receipt_long</mat-icon> GST
         </a>
 

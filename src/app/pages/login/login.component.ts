@@ -31,7 +31,7 @@ export class LoginComponent {
       .subscribe({
         next: (res) => {
           alert('Login successful');
-          this.router.navigateByUrl('dashboard');
+          this.router.navigateByUrl('home/dashboard');
         },
         error: () => {
           alert('Wrong Credentials');
