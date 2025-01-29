@@ -295,9 +295,10 @@ export class SalesregisterComponent {
       cgst: this.newItem.cgst,
       sgst: this.newItem.sgst,
       makingCharge: this.newItem.makingcharge,
-      totalValue: this.newItem.total,
+      totalValue: parseFloat(this.newItem.total.toFixed(2)),
       Discount: Number(this.newItem.discount),
     };
+    debugger;
       console.log('my data',itemToAdd);
       this.apiService.addBillingDetails(itemToAdd).subscribe({
     
@@ -347,18 +348,36 @@ export class SalesregisterComponent {
   }
 
 
+  // calculateTotal() {
+  //   this.totalBill = 0;
+
+  //   this.items.forEach((item) => {
+  //     item.total = item.price - item.discount;
+  //     item.total+=item.cgst;
+  //     item.total+=item.sgst;
+  //     item.total+=item.makingcharge;
+  //     this.totalAmountInBill+=parseFloat(item.total.toFixed(2));
+  //     // this.totalBill += item.total;
+  //   });
+  // }
+
   calculateTotal() {
     this.totalBill = 0;
-
+    this.totalAmountInBill = 0; 
+  
     this.items.forEach((item) => {
-      item.total = item.price - item.discount;
-      item.total+=item.cgst;
-      item.total+=item.sgst;
-      item.total+=item.makingcharge;
-      this.totalAmountInBill+=item.total;
-      // this.totalBill += item.total;
+      item.total = parseFloat((item.price - item.discount).toFixed(2));
+      item.total += parseFloat(item.cgst.toFixed(2));
+      item.total += parseFloat(item.sgst.toFixed(2));
+      item.total += parseFloat(item.makingcharge.toFixed(2));
+  
+      item.total = parseFloat(item.total.toFixed(2)); 
+      this.totalAmountInBill += item.total;
     });
+  
+    this.totalAmountInBill = parseFloat(this.totalAmountInBill.toFixed(2)); 
   }
+  
 
 
   printBill() {
