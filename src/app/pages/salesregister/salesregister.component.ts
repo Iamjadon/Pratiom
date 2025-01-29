@@ -7,12 +7,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
 import { jsPDF } from 'jspdf';
-
-
+import { ApiService } from '../../services/api-service';
 @Component({
   selector: 'app-salesregister',
   standalone: true,
@@ -28,17 +28,26 @@ import { jsPDF } from 'jspdf';
     MatCardModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatIconModule
   ],
   templateUrl: './salesregister.component.html',
   styleUrls: ['./salesregister.component.css'],
 })
 export class SalesregisterComponent {
 
-   constructor(private http: HttpClient){}
-  
-
+  totalAmountInBill: number = 0;
+  isPaymentModalOpen: boolean = false;
+  paymentMode: string = 'full_cash';  
+  amount: number = 0;
+  totalPaymentAmount: number = 0;
+  pendingAmount: number = 0;
+  currentGoldPricePerGram: number = 0;
+  currentSilverPricePerGram: number = 0;
   karatPrice:number=1;
   emailInvalid: boolean = false;
+
+  constructor(private http: HttpClient,private apiService: ApiService){}
+
 
   karatValuePrice = [
     { id: 1, karat: '18K', price: 75 },
@@ -49,6 +58,79 @@ export class SalesregisterComponent {
   ];
 
 
+  ngOnInit(): void {
+    this.fetchGoldPrice();
+  }
+
+  openPaymentModal() {
+    this.isPaymentModalOpen = true;  
+  }
+
+  spilitBill() {
+    this.isPaymentModalOpen = true;
+  }
+
+  closePaymentModal() {
+    this.isPaymentModalOpen = false; 
+  }
+  trackByIndex(index: number, item: any): any {
+    return index;  
+  }
+  
+
+  saveAmount() {
+    const amount = this.amount; 
+    const key = this.paymentMode; 
+    const totalAmount = this.totalAmountInBill; 
+    if (isNaN(amount) || amount <= 0) {
+      console.log('Invalid amount');
+      return;
+    }
+    this.totalPaymentAmount += amount; 
+
+    if (this.totalPaymentAmount> totalAmount) {
+      alert("Payment cannot be greater than the total item amount.");
+      return; 
+    }
+    this.pendingAmount = totalAmount - this.totalPaymentAmount;
+
+
+    const paymentData = {
+      invoiceNo: this.invoiceNo,
+      paymentType: key,
+      money: this.amount,
+    };
+
+    // Call API to Save Data
+    this.apiService.splitPayment(paymentData).subscribe({
+      next: (response) => {
+        console.log('Payment saved successfully:', response);
+        alert('Payment saved successfully!');
+      },
+      error: (error) => {
+        console.error('Error saving payment:', error);
+        alert('Failed to save payment.');
+      },
+    });
+
+    this.amount = 0;  
+  }
+  
+  fetchGoldPrice() {
+    this.apiService.getGoldAndSilverPrice().subscribe({
+      next: (response) => {
+        if (response && response.todayGoldPrice) {
+          this.currentGoldPricePerGram = response.todayGoldPrice / 10; 
+          this.currentSilverPricePerGram=response.todaySilverPrice / 10;
+          console.log('Fetched current gold price per gram:', this.currentGoldPricePerGram);
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching gold price:', error);
+      }
+    });
+  }
+  
   validateEmail(event: any): void {
     const email = event.target.value;
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -58,30 +140,47 @@ export class SalesregisterComponent {
     }
   }
 
-
+  onMetalTypeChange() {
+    if (this.newItem.metalType === 'silver') {
+      this.newItem.Karat = '24K';  
+      this.calculateKaratPrice();  
+    }
+  }
+  
   calculateKaratPrice() {
     const selectedKarat = this.karatValuePrice.find(
       (item) => item.karat === this.newItem.Karat
     );
   
     if (selectedKarat) {
-      const currentGoldPricePerGram = 1000; 
       const karatPrice = selectedKarat.price;
       const netmetal = parseFloat((Number(this.newItem.netmetal) || 0).toFixed(2));
       const stone = Number(this.newItem.StoneAmt) || 0;
-      const productPrice = ((currentGoldPricePerGram * karatPrice) / 100) * netmetal + stone;
-      this.newItem.price = parseFloat(productPrice.toFixed(2)); 
+  
+      let productPrice = 0;
+  
+      if (this.newItem.metalType === 'silver') {
+        this.newItem.Karat = '24K'; 
+        productPrice = (this.currentSilverPricePerGram * netmetal) + stone;
+      } else {
+        productPrice = ((this.currentGoldPricePerGram * karatPrice) / 100) * netmetal + stone;
+      }
+  
+      this.newItem.price = parseFloat(productPrice.toFixed(2));
       this.newItem.cgst = parseFloat((productPrice * 1.5 / 100).toFixed(2));
       this.newItem.sgst = parseFloat((productPrice * 1.5 / 100).toFixed(2));
       this.newItem.makingcharge = parseFloat((productPrice * 15 / 100).toFixed(2));
+  
       this.newItem.total = parseFloat(
-        (productPrice + this.newItem.cgst + this.newItem.sgst+this.newItem.makingcharge).toFixed(2)
+        (productPrice + this.newItem.cgst + this.newItem.sgst + this.newItem.makingcharge).toFixed(2)
       );
+  
       this.karatPrice = this.newItem.price;
     } else {
       console.log('No Karat selected or invalid Karat.');
     }
   }
+  
   
   showTable: boolean = false; 
 
@@ -95,6 +194,7 @@ export class SalesregisterComponent {
   invoiceDate: Date = new Date();
   idType:string='';
   idNumber:string='';
+  paymentType:string='';
 
   generateInvoiceNo() {
     if (this.partyName) {
@@ -111,7 +211,7 @@ export class SalesregisterComponent {
   }
   resetItem() {
     this.newItem = {
-      paymentType: '', 
+      
       metalType: '',
       itemName: '',
       quantity: 0,
@@ -132,7 +232,7 @@ export class SalesregisterComponent {
   
 
   newItem = {
-    paymentType: '', 
+
     metalType: '',
     itemName: '',
     quantity: 0,
@@ -180,7 +280,7 @@ export class SalesregisterComponent {
       mobileNumber: this.mobile,
       idType: this.idType,
       idNumber: this.idNumber,
-      pay: this.newItem.paymentType,
+      pay: this.paymentType,
       invoiceNo: this.invoiceNo,
       invoiceDate: new Date().toISOString(),  
       gstNO: this.gstNo,
@@ -199,7 +299,7 @@ export class SalesregisterComponent {
       Discount: Number(this.newItem.discount),
     };
       console.log('my data',itemToAdd);
-      this.http.post('https://localhost:7088/api/Billing/AddBillingDetails', itemToAdd).subscribe({
+      this.apiService.addBillingDetails(itemToAdd).subscribe({
     
         next: (response) => {
           console.log('Item added successfully:', response);
@@ -217,7 +317,7 @@ export class SalesregisterComponent {
     this.items.push({ ...this.newItem });
 
     this.newItem = {
-      paymentType: '', 
+
       metalType: '',
       itemName: '',
       quantity: 0,
@@ -255,144 +355,179 @@ export class SalesregisterComponent {
       item.total+=item.cgst;
       item.total+=item.sgst;
       item.total+=item.makingcharge;
-
+      this.totalAmountInBill+=item.total;
       // this.totalBill += item.total;
     });
   }
 
-printBill() {
-  const doc = new jsPDF({ format: 'letter', unit: 'mm', orientation: 'portrait' });
 
-  const pageWidth = doc.internal.pageSize.width;
-  const pageHeight = doc.internal.pageSize.height;
-
-  const marginLeft = 10;
-  const marginRight = 10;
-  const tableWidth = pageWidth - marginLeft - marginRight;
-
-  // Generate a more descriptive file name
-  const fileName = `Invoice_${this.invoiceNo}_${this.partyName.replace(/\s+/g, '_')}.pdf`;
-
-  // Header Section with company details
-  doc.setFontSize(24);
-  doc.setFont("helvetica", "bold");
-  doc.text("Pratiom Jewellery", pageWidth / 2, 20, { align: "center" });
-
-  // Party Details Section (Formatted)
-  doc.setFontSize(12);
-  doc.setFont("helvetica", "normal");
-  const partyDetails = [
-    `Customer Name: ${this.partyName || 'N/A'}`,
-    `Address: ${this.address || 'N/A'}`,
-    `Mobile: ${this.mobile || 'N/A'}`,
-    `Pay Mode: ${this.newItem.paymentType || 'N/A'}`,
-    `GST Number: ${this.gstNo || 'N/A'}`,
-    `ID: ${this.idNumber || 'N/A'}`,
-    `Invoice Date: ${this.invoiceDate ? this.invoiceDate.toDateString() : 'N/A'}`
-  ];
-
-  let yPosition = 40;
-  partyDetails.forEach(detail => {
-    doc.text(detail, marginLeft, yPosition);
-    yPosition += 10;
-  });
-
-  // Invoice Details Section (Right-aligned)
-  doc.text(`Invoice No: ${this.invoiceNo || 'N/A'}`, pageWidth - 100, yPosition, { align: "right" });
-  yPosition += 10;
-
-  // Items Table Header with SGST, CGST, and Making Charge columns
-  doc.setFont("helvetica", "bold");
-  yPosition += 10;
-  doc.text("Items", marginLeft, yPosition);
-  yPosition += 10;
-
-  doc.setLineWidth(0.5);
-  doc.line(marginLeft, yPosition, pageWidth - marginRight, yPosition); // Horizontal line for header
-  yPosition += 5;
-
-  // Adjusted Table headers
-  doc.text("Item No.", marginLeft, yPosition);
-  doc.text("Item Name", marginLeft + 20, yPosition);
-  doc.text("Product Price", marginLeft + 60, yPosition); // Increased space for product price
-  doc.text("Making Charge", marginLeft + 100, yPosition); // Adjusted position
-  doc.text("SGST", marginLeft + 140, yPosition); // Adjusted position
-  doc.text("CGST", marginLeft + 170, yPosition); // Adjusted position
-  doc.text("Discount", marginLeft + 200, yPosition); // Adjusted position
-  doc.text("Total", marginLeft + 230, yPosition); // Adjusted position
-  yPosition += 5;
-
-  doc.line(marginLeft, yPosition, pageWidth - marginRight, yPosition); // Horizontal line under headers
-  yPosition += 5;
-
-  // Items Table Content with Safe Checks
-  let total = 0;
-  this.items.forEach((item, index) => {
-    const price = parseFloat(item.price) || 0;
-    const sgst = parseFloat(item.sgst) || 0;
-    const cgst = parseFloat(item.cgst) || 0;
-    const makingCharge = parseFloat(item.makingcharge) || 0;
-    const itemTotal = parseFloat(item.total) || 0;
-    total += itemTotal;
-    const qty = item.qty || 0;
-    const itemName = item.itemName || 'Unknown Item';
-
-    // Ensure discount is a number before calling toFixed
-    const discount = parseFloat(item.discount) || 0;  // Safeguard for discount
-    const itemDiscount = discount.toFixed(2);
-
-    // Print item details
-    doc.text((index + 1).toString(), marginLeft, yPosition);
-    doc.text(itemName, marginLeft + 20, yPosition);
-    doc.text(price.toFixed(2), marginLeft + 60, yPosition);  // Adjusted position
-    doc.text(makingCharge.toFixed(2), marginLeft + 100, yPosition); // Adjusted position
-    doc.text(sgst.toFixed(2), marginLeft + 140, yPosition); // Adjusted position
-    doc.text(cgst.toFixed(2), marginLeft + 170, yPosition); // Adjusted position
-    doc.text(itemDiscount, marginLeft + 200, yPosition); // Adjusted position
-    doc.text(itemTotal.toFixed(2), marginLeft + 230, yPosition); // Adjusted position
-
-    yPosition += 10;
-
-    // Add a new page if the content exceeds the page height
-    if (yPosition > pageHeight - 40) {
-      doc.addPage();
-      yPosition = 20;
-    }
-  });
-
-  // Summary Section
-  if (yPosition > pageHeight - 40) {
-    doc.addPage();
-    yPosition = 20;
-  }
-  yPosition += 10;
-
-  doc.setFont("helvetica", "bold");
-  doc.text("Summary", marginLeft, yPosition);
-  yPosition += 10;
-
-  doc.setFont("helvetica", "normal");
-  doc.text(`Total: ${total.toFixed(2)}`, marginLeft, yPosition);
-  yPosition += 10;
-  doc.text(`SGST: ${this.sgst.toFixed(2)}`, marginLeft, yPosition);
-  yPosition += 10;
-  doc.text(`CGST: ${this.cgst.toFixed(2)}`, marginLeft, yPosition);
-  yPosition += 10;
-  doc.text(`Discount: ${this.newItem.discount.toFixed(2)}`, marginLeft, yPosition);
-  yPosition += 10;
-  doc.text(`Grand Total: ${(total + this.sgst + this.cgst + this.newItem.discount).toFixed(2)}`, marginLeft, yPosition);
-
-  // Footer Section with company info
-  doc.setFontSize(10);
-  doc.setFont("helvetica", "italic");
-  doc.text("Thank you for your business!", pageWidth / 2, pageHeight - 10, { align: "center" });
-
-  // Open the print dialog without opening a new tab (directly in the current window)
-  doc.autoPrint();
-  window.open(doc.output('bloburl'), '_blank');
-}
-
+  printBill() {
+    this.apiService.getsplitPayment().subscribe(paymentSplits => {
+      const doc = new jsPDF({ 
+        format: 'letter', 
+        unit: 'mm', 
+        orientation: 'portrait' 
+      });
   
-
+      const pageWidth = doc.internal.pageSize.width;
+      const pageHeight = doc.internal.pageSize.height;
+      const margin = 10;
+      let yPosition = 20;
+  
+      // Column configuration remains the same
+      const columns = [
+        { header: 'No', width: 12, align: 'left' },
+        { header: 'Item', width: 43, align: 'left' },
+        { header: 'Price', width: 25, align: 'right' },
+        { header: 'Making', width: 25, align: 'right' },
+        { header: 'SGST', width: 20, align: 'right' },
+        { header: 'CGST', width: 20, align: 'right' },
+        { header: 'Discount', width: 25, align: 'right' },
+        { header: 'Total', width: 30, align: 'right' }
+      ];
+  
+      // Rest of the PDF generation code remains identical
+      const totalWidth = columns.reduce((sum, col) => sum + col.width, 0);
+      const tableWidth = pageWidth - 2 * margin;
+      
+      const drawCell = (text: string, x: number, width: number, align: 'left' | 'right') => {
+        const padding = 3;
+        const xPos = align === 'right' ? x + width - padding : x + padding;
+        doc.text(text, xPos, yPosition + 5, { align });
+      };
+  
+      const checkPageBreak = (requiredHeight: number) => {
+        if (yPosition + requiredHeight > pageHeight - margin) {
+          doc.addPage();
+          yPosition = 20;
+          drawHeader();
+        }
+      };
+  
+      const drawHeader = () => {
+        doc.setFont("helvetica", "bold");
+        doc.setFillColor(230, 230, 250);
+        doc.rect(margin, yPosition, tableWidth, 8, 'F');
+        
+        let x = margin;
+        columns.forEach(col => {
+          drawCell(col.header, x, col.width, col.align as 'left' | 'right');
+          x += col.width;
+        });
+        yPosition += 8;
+      };
+  
+      doc.setFontSize(18);
+      doc.text("Pratiom Jewellery", pageWidth / 2, yPosition, { align: "center" });
+      yPosition += 15;
+  
+      const details = [
+        `Customer: ${this.partyName || 'N/A'}`, 
+        `Address: ${this.address || 'N/A'}`,
+        `Mobile: ${this.mobile || 'N/A'}`, 
+        `Invoice: ${this.invoiceNo || 'N/A'}`
+      ];
+      
+      details.forEach((detail, index) => {
+        doc.setFontSize(10);
+        doc.text(detail, margin, yPosition + (index * 6));
+      });
+      yPosition += 30;
+  
+      drawHeader();
+  
+      this.items.forEach((item, index) => {
+        checkPageBreak(8);
+        
+        if (index % 2 === 0) {
+          doc.setFillColor(245, 245, 245);
+          doc.rect(margin, yPosition, tableWidth, 8, 'F');
+        }
+  
+        const rowData = [
+          (index + 1).toString(),
+          item.itemName?.substring(0, 20) || 'N/A',
+          parseFloat(item.price).toFixed(2),
+          parseFloat(item.makingcharge).toFixed(2),
+          parseFloat(item.sgst).toFixed(2),
+          parseFloat(item.cgst).toFixed(2),
+          parseFloat(item.discount).toFixed(2),
+          (parseFloat(item.total) - parseFloat(item.discount)).toFixed(2)
+        ];
+  
+        let x = margin;
+        columns.forEach((col, colIndex) => {
+          drawCell(rowData[colIndex], x, col.width, col.align as 'left' | 'right');
+          x += col.width;
+        });
+        
+        yPosition += 8;
+      });
+  
+      checkPageBreak(50);
+      yPosition += 10;
+  
+      const summaryData = [
+        { label: 'Subtotal:', value: this.items.reduce((a, b) => a + parseFloat(b.total), 0).toFixed(2) },
+        { label: 'Total SGST:', value: this.items.reduce((a, b) => a + parseFloat(b.sgst), 0).toFixed(2) },
+        { label: 'Total CGST:', value: this.items.reduce((a, b) => a + parseFloat(b.cgst), 0).toFixed(2) },
+        { label: 'Total Making:', value: this.items.reduce((a, b) => a + parseFloat(b.makingcharge), 0).toFixed(2) },
+        { label: 'Total Discount:', value: this.items.reduce((a, b) => a + parseFloat(b.discount), 0).toFixed(2) },
+        { label: 'Grand Total:', value: this.items.reduce((a, b) => a + parseFloat(b.total) + 
+          parseFloat(b.sgst) + parseFloat(b.cgst) + 
+          parseFloat(b.makingcharge) - parseFloat(b.discount), 0).toFixed(2) }
+      ];
+  
+      summaryData.forEach(row => {
+        doc.setFontSize(10);
+        doc.text(row.label, margin, yPosition);
+        doc.text(row.value, pageWidth - margin, yPosition, { align: "right" });
+        yPosition += 7;
+      });
+  
+      checkPageBreak(30);
+      yPosition += 15;
+  
+      const paymentHeader = ['Payment Method', 'Amount'];
+      const payments = paymentSplits
+      .filter((p: any) => p.invoiceNo === this.invoiceNo)
+      .map((p: any) => ({
+        method: p.paymentType.charAt(0).toUpperCase() + p.paymentType.slice(1),
+        amount: p.money.toFixed(2)
+      }));
+  
+      doc.setFont("helvetica", "bold");
+      doc.setFillColor(230, 230, 250);
+      doc.rect(margin, yPosition, pageWidth - 2*margin, 8, 'F');
+      doc.text(paymentHeader[0], margin + 3, yPosition + 5);
+      doc.text(paymentHeader[1], pageWidth - margin - 3, yPosition + 5, { align: "right" });
+      yPosition += 8;
+  
+      doc.setFont("helvetica", "normal");
+      payments.forEach((payment:any, index:number) => {
+        checkPageBreak(8);
+        
+        if (index % 2 === 0) {
+          doc.setFillColor(245, 245, 245);
+          doc.rect(margin, yPosition, pageWidth - 2*margin, 8, 'F');
+        }
+  
+        doc.text(payment.method, margin + 3, yPosition + 5);
+        doc.text(payment.amount, pageWidth - margin - 3, yPosition + 5, { align: "right" });
+        yPosition += 8;
+      });
+  
+      checkPageBreak(20);
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "italic");
+      doc.text("Thank you for your business!", pageWidth / 2, pageHeight - 10, { align: "center" });
+  
+      doc.autoPrint();
+      window.open(doc.output('bloburl'), '_blank');
+    }, error => {
+      console.error('Error fetching payment splits:', error);
+    });
+  }
+  
   
 }

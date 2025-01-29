@@ -30,6 +30,10 @@ export class DashboardComponent implements AfterViewInit {
 
 
   ngOnInit() {
+    if (!sessionStorage.getItem('firstLoad')) {
+      sessionStorage.setItem('firstLoad', 'true');
+      location.reload(); 
+    }
     this.apiService.getemetalprice().subscribe({
       next: (data: metalprice) => {
         this.goldPrice = data.todayGoldPrice; 

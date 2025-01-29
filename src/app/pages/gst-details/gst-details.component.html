@@ -2,9 +2,9 @@
   <h2>GST Details</h2>
 
   <!-- Search Input -->
-  <div class="search-container mb-3">
+  <!-- <div class="search-container mb-3">
     <input class="form-control" type="text" (keyup)="applyFilter($event)" placeholder="Search by Invoice or Item Name">
-  </div>
+  </div> -->
 
   <!-- Table -->
   <table class="table table-bordered table-striped">
@@ -14,9 +14,10 @@
         <th>Item Name</th>
         <th>Quantity</th>
         <th>Weight</th>
-        <th>SGST</th>
-        <th>GST</th>
         <th>Product Price</th>
+        <th>SGST</th>
+        <th>CGST</th>
+        <th>Making Charge</th>
         <th>Discount</th>
         <th>Total</th>
       </tr>
@@ -27,9 +28,10 @@
         <td>{{ row.itemName }}</td>
         <td>{{ row.quantity }}</td>
         <td>{{ row.totalWeight }}g</td>
+        <td>{{ row.productPrice }}</td>
         <td>{{ row.sgst }}</td>
         <td>{{ row.cgst }}</td>
-        <td>{{ row.productPrice }}</td>
+        <td>{{ row.makingCharge }}</td>
         <td>{{ row.discount }}</td>
         <td>{{ row.totalValue }}</td>
       </tr>

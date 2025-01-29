@@ -95,7 +95,7 @@
 
       <div class="col-md-4">
         <label>Pay</label>
-        <select class="form-control" [(ngModel)]="newItem.paymentType">
+        <select class="form-control" [(ngModel)]="paymentType">
           <option value="" disabled>Select Type</option>
           <option value="PhonePe">PhonePe</option>
           <option value="GooglePay">GooglePay</option>
@@ -114,7 +114,7 @@
     <div class="row item-row">
       <div class="col-md-4">
         <label>metal Type</label>
-        <select class="form-control" [(ngModel)]="newItem.metalType">
+        <select class="form-control" [(ngModel)]="newItem.metalType" (change)="onMetalTypeChange()">
           <option value="" >Select Type</option>
           <option value="gold">Gold</option>
           <option value="silver">Silver</option>
@@ -278,6 +278,7 @@
     </table>
     <div class="col-md-12 text-right mt-3">
       <button class="btn btn-secondary" (click)="printBill()">Print Invoice</button>
+      <button class="btn btn-warning" (click)="spilitBill()">Split Payment</button>
     </div>
   </div>
 
@@ -286,3 +287,27 @@
     <!-- Payment details fields here -->
   </div>
 </div>
+
+<div class="modal" [ngClass]="{ 'show': isPaymentModalOpen }">
+  <div class="modal-content">
+    <span class="close" (click)="closePaymentModal()">&times;</span>
+    <h2>Payment Split</h2>
+
+    <label for="paymentMode">Payment Mode</label>
+    <select id="paymentMode" [(ngModel)]="paymentMode">
+      <option value="full_cash">Full Cash</option>
+      <option value="upi">UPI payment</option>
+      <option value="metal_exchange">Metal Exchange</option>
+    </select>
+
+    <label for="amount">Amount</label>
+    <div class="input-container">
+      <input type="number" id="amount" [(ngModel)]="amount" placeholder="Enter Amount" />
+      <span class="add-icon" (click)="saveAmount()">+</span>
+    </div>
+    <p class="red-text">spilit amount left: {{ pendingAmount }}</p>
+    <!-- <button mat-raised-button color="primary" (click)="confirmPayment()">Confirm Payment</button> -->
+  </div>
+</div>
+
+

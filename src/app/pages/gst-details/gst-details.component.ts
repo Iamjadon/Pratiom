@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { ApiService } from '../../services/api-service';
 
-// Define interfaces
 interface TotalValues {
   totalQuantity: number;
   totalSGST: number;
@@ -22,6 +21,7 @@ interface DataItem {
   productPrice: number;
   discount: string;
   totalValue: number;
+  makingCharge:string;
 }
 
 @Component({
@@ -47,10 +47,10 @@ export class GstDetailsComponent implements OnInit {
     totalValue: 0,
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private apiService: ApiService) {}
 
   ngOnInit() {
-    this.http.get('https://localhost:7088/api/Billing/GetAllBillingDetails').subscribe((response: any) => {
+    this.apiService.getBillingDetails().subscribe((response: any) => {
       this.data = response.data; 
       this.totalValues = response.totalValues;
       this.filteredData = this.data;

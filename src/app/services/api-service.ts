@@ -24,10 +24,30 @@ export class ApiService {
 
   getemetalprice(): Observable<metalprice> {
     return this.http.get<metalprice>(`${this.baseUrl}${API_ENDPOINTS.GETMETALPRICE}`, {
-      withCredentials: true  // Include credentials (cookies, authorization headers) in the request
+      withCredentials: true  
     });
+
   }
-  
+
+  getBillingDetails(): Observable<any> {
+    return this.http.get(`${this.baseUrl}${API_ENDPOINTS.GETBILLINGDETAILS}`);
+  }
+
+
+  getGoldAndSilverPrice(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}${API_ENDPOINTS.GOLDANDSILVERPRICES}`);
+  }
+
+  addBillingDetails(item: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}${API_ENDPOINTS.ADDBILLINGDETAILS}`, item);
+  }
+
+  splitPayment(paymentData: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}${API_ENDPOINTS.SPLITPAYMENT}`, paymentData);
+  }
+  getsplitPayment(): Observable<any> {
+    return this.http.get(`${this.baseUrl}${API_ENDPOINTS.GETSPLITPAYMENT}`);
+  }
 
   
 }  
