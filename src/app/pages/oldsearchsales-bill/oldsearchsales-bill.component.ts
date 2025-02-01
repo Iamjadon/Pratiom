@@ -1,8 +1,7 @@
-// gst-details.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCalendarAlt, faSearch, faSync } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarDay, faSearch, faSync, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from '../../services/api-service';
 
 interface DataItem {
@@ -11,36 +10,34 @@ interface DataItem {
   itemName: string;
   quantity: number;
   totalWeight: number;
-  price: number;
   sgst: number;
   cgst: number;
-  makingCharge: number;
+  price: number;
   discount: number;
-  total: number;
+  totalValue: number;
+  makingCharge: number;
   invoiceDate: string;
+  total: number;
 }
 
 @Component({
-  selector: 'app-gst-details',
+  selector: 'app-oldsearchsales-bill',
   standalone: true,
   imports: [CommonModule, FontAwesomeModule],
-  templateUrl: './gst-details.component.html',
-  styleUrls: ['./gst-details.component.css']
+  templateUrl: './oldsearchsales-bill.component.html',
+  styleUrl: './oldsearchsales-bill.component.css'
 })
-export class GstDetailsComponent implements OnInit {
+export class OldsearchsalesBillComponent implements OnInit {
   faSearch = faSearch;
-  faCalendarAlt = faCalendarAlt;
+  faCalendarDay = faCalendarDay;
   faSync = faSync;
+  faTimes = faTimes;
 
   data: DataItem[] = [];
   filteredData: DataItem[] = [];
   displayedData: DataItem[] = [];
   searchTerm = '';
-  selectedMonth = '';
-  months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ];
+  selectedDate = '';
 
   // Pagination
   currentPage = 1;
@@ -74,7 +71,9 @@ export class GstDetailsComponent implements OnInit {
       error: (error) => console.error('Error:', error)
     });
   }
-
+  private parseCurrency(value: string): number {
+    return parseFloat(value.replace(/[^0-9.]/g, ''));
+  }
   private transformApiResponse(response: any): DataItem[] {
     return response.data.flatMap((invoice: any) => 
       invoice.items.map((item: any) => ({
@@ -93,14 +92,12 @@ export class GstDetailsComponent implements OnInit {
       }))
     );
   }
+
   refresh() {
     this.searchTerm = '';
-    this.selectedMonth = '';
+    this.selectedDate = '';
     this.currentPage = 1;
     this.loadData();
-  }
-  private parseCurrency(value: string): number {
-    return parseFloat(value.replace(/[^0-9.]/g, ''));
   }
 
   applyFilter(event: Event) {
@@ -108,34 +105,21 @@ export class GstDetailsComponent implements OnInit {
     this.applyFilters();
   }
 
-  applyMonthFilter(event: Event) {
-    this.selectedMonth = (event.target as HTMLSelectElement).value;
+  applyDateFilter(event: Event) {
+    this.selectedDate = (event.target as HTMLInputElement).value;
     this.applyFilters();
   }
 
-  // applyFilters() {
-  //   this.filteredData = this.data.filter(item => {
-  //     const invoiceDate = new Date(item.invoiceDate);
-  //     const itemMonth = invoiceDate.toLocaleString('default', { month: 'long' });
-  //     const monthMatch = !this.selectedMonth || itemMonth === this.selectedMonth;
+  clearDate() {
+    this.selectedDate = '';
+    this.applyFilters();
+  }
 
-  //     const searchMatch = !this.searchTerm || 
-  //       item.invoiceNo.toLowerCase().includes(this.searchTerm) ||
-  //       item.partyName.toLowerCase().includes(this.searchTerm) ||
-  //       item.itemName.toLowerCase().includes(this.searchTerm);
-
-  //     return monthMatch && searchMatch;
-  //   });
-
-  //   this.calculateTotals();
-  //   this.updatePagination();
-  // }
   applyFilters() {
     this.filteredData = this.data.filter(item => {
       // Date filtering
-      const invoiceDate = new Date(item.invoiceDate);
-      const itemMonth = invoiceDate.toLocaleString('default', { month: 'long' });
-      const monthMatch = !this.selectedMonth || itemMonth === this.selectedMonth;
+      const invoiceDate = new Date(item.invoiceDate).toISOString().split('T')[0];
+      const dateMatch = !this.selectedDate || invoiceDate === this.selectedDate;
 
       // Search filtering
       const searchMatch = !this.searchTerm || 
@@ -143,7 +127,7 @@ export class GstDetailsComponent implements OnInit {
         item.partyName.toLowerCase().includes(this.searchTerm) ||
         item.itemName.toLowerCase().includes(this.searchTerm);
 
-      return monthMatch && searchMatch;
+      return dateMatch && searchMatch;
     });
 
     this.calculateTotals();

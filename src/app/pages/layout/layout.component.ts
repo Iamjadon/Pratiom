@@ -59,5 +59,8 @@ constructor(private dialog: MatDialog,private router: Router) {}
   navigateToGst(){
     this.router.navigateByUrl('home/gstDetails');
   }
+  openSearchOldSales(){
+    this.router.navigateByUrl('home/oldsalessearch');
+  }
   
 }

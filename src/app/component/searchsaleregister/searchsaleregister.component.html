@@ -1,25 +1,15 @@
 <div class="container mt-4">
-    <h2 class="text-center mb-4">Search Invoice</h2>
-    <form (ngSubmit)="search()">
-      <div class="mb-3">
-        <mat-form-field appearance="fill" class="w-100">
-          <mat-label>Enter Invoice Number</mat-label>
-          <input matInput [(ngModel)]="invoiceNumber" name="invoiceNumber" required>
-        </mat-form-field>
-      </div>
-  
-      <div class="mb-3">
-        <mat-form-field appearance="fill" class="w-100">
-          <mat-label>Select Party Name</mat-label>
-          <mat-select [(ngModel)]="selectedParty" name="selectedParty" required>
-            <mat-option *ngFor="let party of parties" [value]="party">{{ party }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-  
-      <div class="text-center">
-        <button mat-raised-button color="primary" class="btn btn-primary btn-lg" type="submit">Search</button>
-      </div>
-    </form>
-  </div>
-  
+  <h2 class="text-center mb-4">Reprint Your Bill Again!</h2>
+  <form (ngSubmit)="searchInvoice()">
+    <div class="mb-3">
+      <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Enter Invoice Number</mat-label>
+        <input matInput [(ngModel)]="invoiceNumber" name="invoiceNumber" required>
+      </mat-form-field>
+    </div>
+
+    <div class="text-center">
+      <button mat-raised-button color="primary" class="btn btn-primary btn-lg" type="submit">Reprint Bill</button>
+    </div>
+  </form>
+</div>

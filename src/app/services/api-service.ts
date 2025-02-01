@@ -49,5 +49,37 @@ export class ApiService {
     return this.http.get(`${this.baseUrl}${API_ENDPOINTS.GETSPLITPAYMENT}`);
   }
 
+  // getBillingDetailsByInvoice(invoiceNo: string): Observable<any> {
+  //   return this.http.get(`${this.baseUrl}${API_ENDPOINTS.GETBILLINGDETAILS_BY_INVOICE}?invoiceNo=${invoiceNo}`);
+  // }
+
+  // getPaymentDetailsByInvoice(invoiceNo: string): Observable<any> {
+  //   return this.http.get(`${this.baseUrl}${API_ENDPOINTS.GETPAYMENTDETAILS_BY_INVOICE}?invoiceNo=${invoiceNo}`);
+  // }
+
+  // getBillingDetailsByInvoice(invoiceNo: string): Observable<any> {
+  //   return this.http.get(`${this.baseUrl}${API_ENDPOINTS.GETBILLINGDETAILS_BY_INVOICE}?invoiceNo=${invoiceNo}`);
+  // }
+
+  getBillingDetailsByInvoice(invoiceNo: string): Observable<any> {
+    const encodedInvoiceNo = encodeURIComponent(invoiceNo);
+    return this.http.get(`${this.baseUrl}/api/Billing/search?invoiceNo=${encodedInvoiceNo}`);
+  }
   
+  getPaymentDetailsByInvoice(invoiceNo: string): Observable<any> {
+    const encodedInvoiceNo = encodeURIComponent(invoiceNo);
+    return this.http.get(`${this.baseUrl}/api/PaymentSplit/search?invoiceNo=${encodedInvoiceNo}`);
+  }
+  
+  createInvoice(invoiceData: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}${API_ENDPOINTS.CREATEINVOICE}`, invoiceData);
+  }
+
+  getLastInvoiceNumber(): Observable<any> {
+    return this.http.get(`${this.baseUrl}${API_ENDPOINTS.GETLASTINVOICENUMBER}`);
+  }
+
+  getInvoiceDetails(): Observable<any> {
+    return this.http.get(`${this.baseUrl}${API_ENDPOINTS.GETINVOICEDETAILS}`);
+  }
 }  

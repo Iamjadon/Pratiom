@@ -9,5 +9,11 @@ export const API_ENDPOINTS = {
     ADDBILLINGDETAILS:'/Billing/AddBillingDetails',
     SPLITPAYMENT:'/PaymentSplit',
     GETSPLITPAYMENT:'/PaymentSplit',
+    GETBILLINGDETAILS_BY_INVOICE: '/Billing/search',
+    GETPAYMENTDETAILS_BY_INVOICE: '/PaymentSplit/search',
+    CREATEINVOICE:'/CustomerDetails/SavedInvoice',
+    GETLASTINVOICENUMBER:'/CustomerDetails/GetLastInvoiceNumber',
+    GETINVOICEDETAILS:'/CustomerDetails/GetInvoiceDetails'
+  
   };
   
