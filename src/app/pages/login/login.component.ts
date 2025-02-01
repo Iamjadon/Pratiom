@@ -30,7 +30,7 @@ export class LoginComponent {
     this.apiService.loginUser(this.loginObj)
       .subscribe({
         next: (res) => {
-          alert('Login successful');
+          // alert('Login successful');
           this.router.navigateByUrl('home/dashboard');
         },
         error: () => {

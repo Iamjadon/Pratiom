@@ -474,7 +474,7 @@ export class SalesregisterComponent {
     });
   }
   
-  printBill() {
+  printBill() { 
     this.apiService.getsplitPayment().subscribe(paymentSplits => {
       const doc = new jsPDF({ 
         format: 'letter', 
@@ -484,91 +484,84 @@ export class SalesregisterComponent {
   
       const pageWidth = doc.internal.pageSize.width;
       const pageHeight = doc.internal.pageSize.height;
-      const margin = 15; // Increased margin for better spacing
+      const margin = 15;
       let yPosition = 20;
   
-      // Column configuration remains the same
+      // Header Styling (Reduced Font Size)
+      doc.setFont("times", "bold");
+      doc.setFontSize(18);
+      doc.setTextColor(0, 0, 128); // Navy blue
+      doc.text("Pratiom Jewellery", pageWidth / 2, yPosition, { align: "center" });
+  
+      yPosition += 8;
+  
+      // Address Styling
+      doc.setFont("courier", "bold");
+      doc.setFontSize(10);
+      doc.setTextColor(0, 0, 0);
+      doc.text("Shop No. 12, Gold Market, Mumbai", pageWidth / 2, yPosition, { align: "center" });
+  
+      yPosition += 12;
+  
+      // Customer Details (Improved UI)
+      doc.setFont("helvetica", "bold");
+      const details = [
+        `Name : ${this.partyName || 'N/A'}`,
+        `Address: ${this.address || 'N/A'}`,
+        `Mobile: ${this.mobile || 'N/A'}`,
+        `Invoice Number: ${this.invoiceNo || 'N/A'}`
+      ];
+  
+      details.forEach((detail, index) => {
+        doc.text(detail, margin, yPosition + (index * 6));
+      });
+  
+      yPosition += 30;
+
+
+      const availableWidth = pageWidth - 2 * margin;
       const columns = [
-        { header: 'No', width: 12, align: 'left' },
-        { header: 'Item', width: 43, align: 'left' },
-        { header: 'Price', width: 25, align: 'right' },
-        { header: 'Making', width: 25, align: 'right' },
+        { header: 'No', width: 15, align: 'left' },
+        { header: 'Item', width: 35, align: 'left' }, 
+        { header: 'Price', width: 30, align: 'right' },
+        { header: 'Making', width: 30, align: 'right' },
         { header: 'SGST', width: 20, align: 'right' },
         { header: 'CGST', width: 20, align: 'right' },
-        { header: 'Discount', width: 25, align: 'right' },
-        { header: 'Total', width: 30, align: 'right' }
+        { header: 'Discount', width: 20, align: 'right' }, 
+        { header: 'Total', width: 30, align: 'right' } 
       ];
   
       const totalWidth = columns.reduce((sum, col) => sum + col.width, 0);
-      const tableWidth = pageWidth - 2 * margin;
-      
-      const drawCell = (text: string, x: number, width: number, align: 'left' | 'right') => {
-        const padding = 3;
-        const xPos = align === 'right' ? x + width - padding : x + padding;
-        doc.text(text, xPos, yPosition + 5, { align });
-      };
   
-      const checkPageBreak = (requiredHeight: number) => {
-        if (yPosition + requiredHeight > pageHeight - margin) {
+      const drawHeader = () => {
+        doc.setFont("helvetica", "bold");
+        doc.setFillColor(220, 220, 220);
+        doc.rect(margin, yPosition, totalWidth, 8, 'F');
+        let x = margin;
+        columns.forEach(col => {
+          doc.text(col.header, x + 2, yPosition + 5);
+          x += col.width;
+        });
+        yPosition += 10;
+      };
+      
+  
+      drawHeader();
+      doc.setFontSize(8);
+
+      this.items.forEach((item, index) => {
+        if (yPosition + 10 > pageHeight - margin) {
           doc.addPage();
           yPosition = 20;
           drawHeader();
         }
-      };
-  
-      const drawHeader = () => {
-        doc.setFont("helvetica", "bold");
-        doc.setFillColor(230, 230, 250);
-        doc.rect(margin, yPosition, tableWidth, 10, 'F'); // Slightly taller header
-        
-        let x = margin;
-        columns.forEach(col => {
-          drawCell(col.header, x, col.width, col.align as 'left' | 'right');
-          x += col.width;
-        });
-        yPosition += 10; // Adjusted for taller header
-      };
-  
-      // Title with improved styling
-      doc.setFontSize(22);
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(0, 0, 128); // Navy blue color
-      doc.text("Pratiom Jewellery", pageWidth / 2, yPosition, { align: "center" });
-      yPosition += 20;
-  
-      // Customer details with better spacing and font
-      const details = [
-        `Customer: ${this.partyName || 'N/A'}`, 
-        `Address: ${this.address || 'N/A'}`,
-        `Mobile: ${this.mobile || 'N/A'}`, 
-      ];
-      
-      doc.setFontSize(12);
-      doc.setTextColor(0, 0, 0); // Black color
-      details.forEach((detail, index) => {
-        doc.text(detail, margin, yPosition + (index * 7)); // Increased line spacing
-      });
-  
-      // Colorful Invoice Number
-      doc.setTextColor(255, 0, 0); // Red color for invoice number
-      doc.text(`Invoice: ${this.invoiceNo || 'N/A'}`, margin, yPosition + 21);
-      doc.setTextColor(0, 0, 0); // Reset to black color
-      yPosition += 35; // Adjusted for better spacing
-  
-      drawHeader();
-  
-      // Table rows with alternating colors and better spacing
-      this.items.forEach((item, index) => {
-        checkPageBreak(10); // Adjusted for better spacing
-        
         if (index % 2 === 0) {
           doc.setFillColor(245, 245, 245);
-          doc.rect(margin, yPosition, tableWidth, 10, 'F'); // Slightly taller rows
+          doc.rect(margin, yPosition, totalWidth, 8, 'F');
         }
-  
         const rowData = [
           (index + 1).toString(),
-          item.itemName?.substring(0, 20) || 'N/A',
+          item.itemName?.substring(0, 30) || 'N/A', 
           parseFloat(item.productPrice).toFixed(2),
           parseFloat(item.makingCharge).toFixed(2),
           parseFloat(item.sgst).toFixed(2),
@@ -576,91 +569,73 @@ export class SalesregisterComponent {
           parseFloat(item.discount).toFixed(2),
           (parseFloat(item.total) - parseFloat(item.discount)).toFixed(2)
         ];
-  
         let x = margin;
-        columns.forEach((col, colIndex) => {
-          drawCell(rowData[colIndex], x, col.width, col.align as 'left' | 'right');
-          x += col.width;
+        rowData.forEach((text, colIndex) => {
+          doc.text(text, x + 2, yPosition + 5);
+          x += columns[colIndex].width;
         });
-        
-        yPosition += 10; // Adjusted for taller rows
+        yPosition += 10;
       });
+      
+      yPosition += 10;
   
-      checkPageBreak(50);
-      yPosition += 15;
-  
-      // Summary section with better styling
+      doc.setFont("times", "bold");
+      doc.setFontSize(10);
       const summaryData = [
         { label: 'Subtotal:', value: this.items.reduce((a, b) => a + parseFloat(b.total), 0).toFixed(2) },
         { label: 'Total SGST:', value: this.items.reduce((a, b) => a + parseFloat(b.sgst), 0).toFixed(2) },
         { label: 'Total CGST:', value: this.items.reduce((a, b) => a + parseFloat(b.cgst), 0).toFixed(2) },
         { label: 'Total Making:', value: this.items.reduce((a, b) => a + parseFloat(b.makingCharge), 0).toFixed(2) },
         { label: 'Total Discount:', value: this.items.reduce((a, b) => a + parseFloat(b.discount), 0).toFixed(2) },
-        { label: 'Grand Total:', value: this.items.reduce((a, b) => a + parseFloat(b.total) + 
-          parseFloat(b.sgst) + parseFloat(b.cgst) + 
-          parseFloat(b.makingCharge) - parseFloat(b.discount), 0).toFixed(2) }
+        { label: 'Grand Total:', value: this.items.reduce((a, b) => a + parseFloat(b.total) + parseFloat(b.sgst) + parseFloat(b.cgst) + parseFloat(b.makingCharge) - parseFloat(b.discount), 0).toFixed(2) }
       ];
   
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "bold");
       summaryData.forEach(row => {
         doc.text(row.label, margin, yPosition);
-        // Highlight the Grand Total field
         if (row.label === 'Grand Total:') {
-          doc.setTextColor(255, 0, 0); // Red color for Grand Total
+          doc.setTextColor(255, 0, 0);
         }
         doc.text(row.value, pageWidth - margin, yPosition, { align: "right" });
-        doc.setTextColor(0, 0, 0); // Reset to black color
-        yPosition += 8; // Adjusted for better spacing
+        doc.setTextColor(0, 0, 0);
+        yPosition += 6;
       });
   
-      checkPageBreak(30);
-      yPosition += 20;
+      yPosition += 10;
   
-      // Payment section with improved styling (only if payment split data is available)
-      if (paymentSplits && paymentSplits.length > 0) {
-        const paymentHeader = ['Payment Method', 'Amount'];
-        const payments = paymentSplits
-          .filter((p: any) => p.invoiceNo === this.invoiceNo)
-          .map((p: any) => ({
-            method: p.paymentType.charAt(0).toUpperCase() + p.paymentType.slice(1),
-            amount: p.money.toFixed(2)
-          }));
-  
+      const relevantPayments = paymentSplits?.filter((p: any) => p.invoiceNo === this.invoiceNo);
+      if (relevantPayments && relevantPayments.length > 0) {
         doc.setFont("helvetica", "bold");
-        doc.setFillColor(230, 230, 250);
-        doc.rect(margin, yPosition, pageWidth - 2 * margin, 10, 'F'); // Slightly taller header
-        doc.text(paymentHeader[0], margin + 3, yPosition + 6);
-        doc.text(paymentHeader[1], pageWidth - margin - 3, yPosition + 6, { align: "right" });
-        yPosition += 10;
+        doc.setFillColor(200, 230, 255);
+        doc.rect(margin, yPosition, totalWidth, 8, 'F');
+        doc.setTextColor(0, 0, 0);
+        doc.text("Payment Method", margin + 2, yPosition + 5);
+        doc.text("Amount", pageWidth - margin - 40, yPosition + 5, { align: "right" });
   
+        yPosition += 10;
         doc.setFont("helvetica", "normal");
-        payments.forEach((payment: any, index: number) => {
-          checkPageBreak(10); // Adjusted for better spacing
-          
+  
+        relevantPayments.forEach((p: any, index: number) => {
           if (index % 2 === 0) {
             doc.setFillColor(245, 245, 245);
-            doc.rect(margin, yPosition, pageWidth - 2 * margin, 10, 'F'); // Slightly taller rows
+            doc.rect(margin, yPosition, totalWidth, 8, 'F');
           }
-  
-          doc.text(payment.method, margin + 3, yPosition + 6);
-          doc.text(payment.amount, pageWidth - margin - 3, yPosition + 6, { align: "right" });
-          yPosition += 10; // Adjusted for taller rows
+          doc.text(p.paymentType.charAt(0).toUpperCase() + p.paymentType.slice(1), margin + 2, yPosition + 5);
+          doc.text(p.money.toFixed(2), pageWidth - margin - 2, yPosition + 5, { align: "right" });
+          yPosition += 8;
         });
       }
+      doc.setTextColor(0, 0, 0);
   
-      checkPageBreak(20);
-  
-      // Additional Instructions
-      doc.setFontSize(10);
+      // Footer
+      yPosition += 10;
+      doc.setFontSize(9);
       doc.setFont("helvetica", "italic");
-      doc.setTextColor(0, 0, 128); // Navy blue color
-      doc.text("1. Please retain this invoice for warranty purposes.", margin, yPosition + 10);
-      doc.text("2. Goods once sold will not be taken back or exchanged.", margin, yPosition + 17);
-      doc.text("3. For any queries, contact us at +91-1234567890.", margin, yPosition + 24);
+      doc.text("1. Please retain this invoice for warranty.", margin, yPosition);
+      doc.text("2. No refunds or exchanges allowed.", margin, yPosition + 5);
+      doc.text("3. For support, contact +91-1234567890.", margin, yPosition + 10);
   
-      doc.setFontSize(12);
-      doc.text("Thank you for your business!", pageWidth / 2, pageHeight - 15, { align: "center" });
+      doc.setFontSize(10);
+      doc.text("Thank you for shopping with us!", pageWidth / 2, pageHeight - 15, { align: "center" });
   
       doc.autoPrint();
       window.open(doc.output('bloburl'), '_blank');
@@ -668,5 +643,5 @@ export class SalesregisterComponent {
       console.error('Error fetching payment splits:', error);
     });
   }
-  
+
 }
