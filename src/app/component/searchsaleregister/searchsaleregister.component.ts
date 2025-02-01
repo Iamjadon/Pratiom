@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import jsPDF from 'jspdf';
+import { ApiService } from "../../services/api-service";
 
 interface Invoice {
   invoiceNo: string;
@@ -61,7 +62,9 @@ export class SearchsaleregisterComponent {
   invoiceItems: BillingItem[] = [];
   paymentSplits: PaymentSplit[] = [];
 
-  constructor(private http: HttpClient) {}
+  // constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient,private apiService: ApiService){}
 
   searchInvoice() {
     if (!this.invoiceNumber.trim()) {
@@ -70,28 +73,26 @@ export class SearchsaleregisterComponent {
     }
   
     const encodedInvoiceNo = encodeURIComponent(this.invoiceNumber);
-    const invoiceUrl = `https://localhost:7088/api/Billing/search?invoiceNo=${encodedInvoiceNo}`;
-    const paymentUrl = `https://localhost:7088/api/PaymentSplit/search?invoiceNo=${encodedInvoiceNo}`;
   
-    this.http.get<Invoice[]>(invoiceUrl).subscribe(
-      (data) => {
-        if (data.length === 0) {
+    this.apiService.getBillingDetailsByInvoice(encodedInvoiceNo).subscribe(
+      (invoiceData) => {
+        if (invoiceData.length === 0) {
           alert("No records found for this invoice.");
           return;
         }
   
-        this.invoiceData = data[0];
-        this.invoiceItems = data[0].invoices;
+        this.invoiceData = invoiceData[0];
+        this.invoiceItems = invoiceData[0].invoices;
   
-        this.http.get<PaymentSplit[]>(paymentUrl).subscribe(
+        this.apiService.getPaymentDetailsByInvoice(encodedInvoiceNo).subscribe(
           (paymentData) => {
             this.paymentSplits = paymentData;
-            this.printBill(); 
+            this.printBill();
           },
           (paymentError: HttpErrorResponse) => {
             console.error("Error fetching payment splits:", paymentError);
-            this.paymentSplits = [];  
-            this.printBill();  
+            this.paymentSplits = [];
+            this.printBill();
           }
         );
       },
@@ -101,6 +102,46 @@ export class SearchsaleregisterComponent {
       }
     );
   }
+
+  // searchInvoice() {
+  //   if (!this.invoiceNumber.trim()) {
+  //     alert("Please enter a valid invoice number.");
+  //     return;
+  //   }
+  
+  //   const encodedInvoiceNo = encodeURIComponent(this.invoiceNumber);
+  //   const invoiceUrl = `https://localhost:7088/api/Billing/search?invoiceNo=${encodedInvoiceNo}`;
+  //   const paymentUrl = `https://localhost:7088/api/PaymentSplit/search?invoiceNo=${encodedInvoiceNo}`;
+  
+  //   this.http.get<Invoice[]>(invoiceUrl).subscribe(
+  //     (data) => {
+  //       if (data.length === 0) {
+  //         alert("No records found for this invoice.");
+  //         return;
+  //       }
+  
+  //       this.invoiceData = data[0];
+  //       this.invoiceItems = data[0].invoices;
+  
+  //       this.http.get<PaymentSplit[]>(paymentUrl).subscribe(
+  //         (paymentData) => {
+  //           this.paymentSplits = paymentData;
+  //           this.printBill(); 
+  //         },
+  //         (paymentError: HttpErrorResponse) => {
+  //           console.error("Error fetching payment splits:", paymentError);
+  //           this.paymentSplits = [];  
+  //           this.printBill();  
+  //         }
+  //       );
+  //     },
+  //     (error: HttpErrorResponse) => {
+  //       console.error("Error fetching invoice details:", error);
+  //       alert("Failed to fetch invoice details. Please try again.");
+  //     }
+  //   );
+  // }
+
 
  
   printBill() {

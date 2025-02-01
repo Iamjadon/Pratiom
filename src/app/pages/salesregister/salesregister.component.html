@@ -256,7 +256,7 @@
   <!-- Items Table Card -->
   <div class="card shadow" *ngIf="showTable">
     <div class="card-header bg-success text-white">
-      <h5 class="mb-0"><i class="bi bi-list-check me-2"></i>Added Items</h5>
+      <h2 class="mb-0"><i class="bi bi-list-check me-2"></i>Added Items</h2>
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -318,7 +318,7 @@
 <div class="modal-dialog modal-dialog-centered">
 <div class="modal-content">
   <div class="modal-header bg-warning">
-    <h5 class="modal-title"><i class="bi bi-cash-coin me-2"></i>Payment Split</h5>
+    <h3 class="modal-title"><i class="bi bi-cash-coin me-2"></i>Payment Split</h3>
     <button type="button" class="btn-close" 
             (click)="closePaymentModal()"></button>
   </div>
@@ -339,7 +339,7 @@
                placeholder="Enter amount to split"
                [(ngModel)]="amount">
         <button class="btn btn-primary" (click)="saveAmount()">
-          <i class="bi bi-plus-lg"></i> Add
+          <i class="fas fa-plus"></i>
         </button>
       </div>
     </div>

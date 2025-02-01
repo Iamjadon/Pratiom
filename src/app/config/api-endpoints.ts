@@ -13,7 +13,8 @@ export const API_ENDPOINTS = {
     GETPAYMENTDETAILS_BY_INVOICE: '/PaymentSplit/search',
     CREATEINVOICE:'/CustomerDetails/SavedInvoice',
     GETLASTINVOICENUMBER:'/CustomerDetails/GetLastInvoiceNumber',
-    GETINVOICEDETAILS:'/CustomerDetails/GetInvoiceDetails'
+    GETINVOICEDETAILS:'/CustomerDetails/GetInvoiceDetails',
+    FETCH_CUSTOMER_DETAILS:'/CustomerDetails/SearchMobile'
   
   };
   

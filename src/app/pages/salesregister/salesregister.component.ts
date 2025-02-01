@@ -449,7 +449,7 @@ export class SalesregisterComponent {
   
     const apiUrl = `https://localhost:7088/api/CustomerDetails/SearchMobile?mobileNumber=${this.mobile}`;
     console.log('My url details',apiUrl);
-    this.http.get<any>(apiUrl).subscribe({
+    this.apiService.fetchCustomerDetails(this.mobile).subscribe({
       next: (response) => {
         if (response.customerDetails) {
           const customer = response.customerDetails;
