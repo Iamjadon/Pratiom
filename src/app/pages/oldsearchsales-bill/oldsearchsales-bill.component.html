@@ -1,0 +1,132 @@
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Search Bills</h3>
+            <div class="d-flex gap-2">
+                <button class="btn btn-light btn-sm" (click)="refresh()">
+                    <i class="fas fa-sync"></i> Refresh
+                </button>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <fa-icon [icon]="faSearch"></fa-icon>
+                        </span>
+                        <input type="text" class="form-control" 
+                            (keyup)="applyFilter($event)"
+                            placeholder="Search invoices, items, or customers..."
+                            [value]="searchTerm">
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <fa-icon [icon]="faCalendarDay"></fa-icon>
+                        </span>
+                        <input type="date" class="form-control" 
+                            (change)="applyDateFilter($event)"
+                            [value]="selectedDate">
+                        <button class="btn btn-outline-secondary" type="button" (click)="clearDate()">
+                            <fa-icon [icon]="faTimes"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Invoice No</th>
+                            <th>Date</th>
+                            <th>Party Name</th>
+                            <th>Item</th>
+                            <th class="text-end">Qty</th>
+                            <th class="text-end">Weight (g)</th>
+                            <th class="text-end">Price</th>
+                            <th class="text-end">SGST</th>
+                            <th class="text-end">CGST</th>
+                            <th class="text-end">Making</th>
+                            <th class="text-end">Discount</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let row of displayedData" class="clickable-row">
+                            <td class="fw-semibold">{{ row.invoiceNo }}</td>
+                            <td>{{ row.invoiceDate | date:'dd/MM/yyyy' }}</td>
+                            <td>{{ row.partyName }}</td>
+                            <td>{{ row.itemName }}</td>
+                            <td class="text-end">{{ row.quantity | number }}</td>
+                            <td class="text-end">{{ row.totalWeight | number: '1.2-2' }}</td>
+                            <td class="text-end">{{ row.price | currency:'INR' }}</td>
+                            <td class="text-end">{{ row.sgst | currency:'INR' }}</td>
+                            <td class="text-end">{{ row.cgst | currency:'INR' }}</td>
+                            <td class="text-end">{{ row.makingCharge | currency:'INR' }}</td>
+                            <td class="text-end text-danger">{{ row.discount | currency:'INR' }}</td>
+                            <td class="text-end fw-bold text-success">{{ row.total | currency:'INR' }}</td>
+                        </tr>
+                        <tr *ngIf="displayedData.length === 0">
+                            <td colspan="12" class="text-center py-4 text-muted">
+                                No records found matching your criteria
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination pagination-sm">
+                            <li class="page-item" [class.disabled]="currentPage === 1">
+                                <a class="page-link" (click)="changePage(currentPage - 1)">
+                                    <i class="fas fa-chevron-left"></i>
+                                </a>
+                            </li>
+                            <li *ngFor="let page of pages" class="page-item" 
+                                [class.active]="page === currentPage">
+                                <a class="page-link" (click)="changePage(page)">{{ page }}</a>
+                            </li>
+                            <li class="page-item" [class.disabled]="currentPage === totalPages">
+                                <a class="page-link" (click)="changePage(currentPage + 1)">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card border-0 bg-light">
+                        <div class="card-body p-3">
+                            <div class="row g-3 text-end">
+                                <div class="col-4">
+                                    <div class="text-muted small">Total Quantity</div>
+                                    <div class="fw-bold">{{ totalValues.totalQuantity | number }}</div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="text-muted small">Total GST</div>
+                                    <div class="fw-bold text-danger">
+                                        {{ (totalValues.totalSGST + totalValues.totalCGST) | currency:'INR' }}
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="text-muted small">Grand Total</div>
+                                    <div class="fw-bold text-success">
+                                        {{ totalValues.grandTotal | currency:'INR' }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

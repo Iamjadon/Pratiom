@@ -1,0 +1,355 @@
+<!-- salesregister.component.html -->
+<div class="container-fluid sales-register">
+  <!-- Customer Details Card -->
+  <div class="card mb-4 shadow">
+    <div class="card-header bg-primary text-white">
+      <h2 class="mb-0"><i class="bi bi-person-lines-fill me-2"></i>Party Details</h2>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <!-- Party Name -->
+        <div class="col-md-6">
+          <label class="form-label">Party Name</label>
+          <input type="text" class="form-control" 
+                 placeholder="Enter party name"
+                 [(ngModel)]="partyName" 
+                  required>
+        </div>
+
+        <!-- Address -->
+        <div class="col-md-6">
+          <label class="form-label">Address</label>
+          <input type="text" class="form-control" 
+                 placeholder="Enter complete address"
+                 [(ngModel)]="address">
+        </div>
+
+        <!-- Mobile -->
+        <div class="col-md-4">
+          <label class="form-label">Mobile Number</label>
+          <input type="tel" class="form-control"
+                 placeholder="Enter mobile number"
+                 [(ngModel)]="mobile"
+                 (input)="fetchCustomerDetails()"  
+                 (keypress)="onEnterPress($event)"  
+                 pattern="[0-9]{10}"
+                 maxlength="10">
+        </div>
+        
+
+        <!-- Email -->
+        <div class="col-md-4">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-control" 
+                 placeholder="example@domain.com"
+                 [(ngModel)]="email" 
+                 (blur)="validateEmail($event)">
+          <div *ngIf="emailInvalid" class="invalid-feedback d-block">
+            Please enter a valid email address
+          </div>
+        </div>
+
+        <!-- Invoice Date -->
+        <div class="col-md-4">
+          <label class="form-label">Invoice Date</label>
+          <input matInput [matDatepicker]="picker" 
+                 class="form-control"
+                 placeholder="Select invoice date"
+                 [(ngModel)]="invoiceDate" [value]="invoiceDate">
+                
+          <!-- <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle> -->
+          <mat-datepicker #picker></mat-datepicker>
+        </div>
+
+        <!-- GST Number -->
+        <div class="col-md-4">
+          <label class="form-label">GST Number</label>
+          <input type="text" class="form-control" 
+                 placeholder="Enter GSTIN"
+                 [(ngModel)]="gstNo">
+        </div>
+
+        <!-- ID Type -->
+        <div class="col-md-4">
+          <label class="form-label">ID Type</label>
+          <select class="form-select" [(ngModel)]="idType">
+            <option value="" disabled selected>Select ID type</option>
+            <option *ngFor="let id of ['Aadhaar','PAN','Driving License','Voter ID','Passport']" 
+                    [value]="id">{{id}}</option>
+          </select>
+        </div>
+
+        <!-- ID Number -->
+        <div class="col-md-4">
+          <label class="form-label">ID Number</label>
+          <input type="text" class="form-control" 
+                 placeholder="Enter ID number"
+                 [(ngModel)]="idNumber">
+        </div>
+
+        <!-- Invoice Number -->
+        <div class="col-md-4">
+          <label class="form-label">Invoice Number</label>
+          <input type="text" class="form-control" 
+                 placeholder="Auto-generated invoice number"
+                 [(ngModel)]="invoiceNo" readonly>
+        </div>
+
+        <!-- Payment Type -->
+        <div class="col-md-4" style="display: none;">
+          <label class="form-label">Payment Method</label>
+          <select class="form-select" [(ngModel)]="paymentType">
+            <option value="" disabled selected>Select payment method</option>
+            <option *ngFor="let type of ['PhonePe','GooglePay','Paytm','DebitCard']" 
+                    [value]="type">{{type}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Item Details Card -->
+  <div class="card mb-4 shadow">
+    <div class="card-header bg-info text-white">
+      <h2 class="mb-0"><i class="bi bi-box-seam me-2"></i>Item Details</h2>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <!-- Metal Type -->
+        <div class="col-md-4">
+          <label class="form-label">Metal Type</label>
+          <select class="form-select" 
+                  [(ngModel)]="newItem.metalType" 
+                  (change)="onMetalTypeChange()">
+            <option value="" disabled selected>Select metal type</option>
+            <option value="gold">Gold</option>
+            <option value="silver">Silver</option>
+          </select>
+        </div>
+
+        <!-- Item Name -->
+        <div class="col-md-4">
+          <label class="form-label">Item Name</label>
+          <input type="text" class="form-control" 
+                 placeholder="Enter item name"
+                 [(ngModel)]="newItem.itemName">
+        </div>
+
+        <!-- Quantity -->
+        <div class="col-md-4">
+          <label class="form-label">Quantity</label>
+          <input type="number" class="form-control" 
+                 placeholder="Enter quantity"
+                 [(ngModel)]="newItem.quantity" min="0">
+        </div>
+
+        <!-- Karat -->
+        <div class="col-md-4">
+          <label class="form-label">Karat </label>
+          <select class="form-select" 
+                  [(ngModel)]="newItem.karatType" 
+                  (change)="calculateKaratPrice()">
+            <option value="" disabled selected>Select karat value</option>
+            <option *ngFor="let karat of karatValuePrice" 
+                    [value]="karat.karat">{{ karat.karat }}</option>
+          </select>
+        </div>
+
+        <!-- Total Weight -->
+        <div class="col-md-4">
+          <label class="form-label">Total Weight (grams)</label>
+          <input type="number" class="form-control" 
+                 placeholder="Enter total weight"
+                 [(ngModel)]="newItem.totalWeight" 
+                 (input)="updatenetMetal()" min="0">
+        </div>
+
+        <!-- Stone Weight -->
+        <div class="col-md-4">
+          <label class="form-label">Stone Weight </label>
+          <input type="number" class="form-control" 
+                 placeholder="Enter stone weight"
+                 [(ngModel)]="newItem.stoneType" 
+                 (change)="calculateKaratPrice()" 
+                 (input)="updatenetMetal()" min="0">
+        </div>
+
+        <!-- Stone Amount -->
+        <div class="col-md-4">
+          <label class="form-label">Stone Value</label>
+          <input type="number" class="form-control" 
+                 placeholder="Enter stone value"
+                 [(ngModel)]="newItem.stoneAmount" 
+                 (change)="calculateKaratPrice()"
+                 [readonly]="newItem.stoneType === 0" 
+                 [value]="newItem.stoneType === 0 ? 0 : newItem.stoneAmount"  
+                 min="0">
+        </div>
+
+        <!-- Readonly Fields -->
+        <div class="col-md-4">
+          <label class="form-label">Net Metal</label>
+          <input type="number" class="form-control" 
+                 [(ngModel)]="newItem.netMetal" 
+                 placeholder="Auto-calculated"
+                 readonly>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Product Price</label>
+          <input type="number" class="form-control" 
+                 [(ngModel)]="newItem.productPrice" 
+                 placeholder="Auto-calculated"
+                 readonly>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Discount</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="newItem.discount"
+            min="0"
+          />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">SGST</label>
+          <input type="text" class="form-control" [(ngModel)]="newItem.sgst" readonly  style="background-color: #e9ecef; cursor: not-allowed;"/>
+        </div>
+        
+        <div class="col-md-4">
+          <label class="form-label">CGST</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="newItem.cgst"
+            readonly
+            style="background-color: #e9ecef; cursor: not-allowed;"
+          />
+        </div>
+        
+        <div class="col-md-4">
+          <label class="form-label">Making charge</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="newItem.makingCharge" readonly  style="background-color: #e9ecef; cursor: not-allowed;"
+          />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Total Value</label>
+          <input type="number" class="form-control" 
+                 [(ngModel)]="newItem.total" 
+                 placeholder="Auto-calculated"
+                 readonly>
+        </div>
+
+        <!-- Add Item Button -->
+        <div class="col-12 text-end">
+          <button class="btn btn-primary" (click)="addItem()">
+            <i class="bi bi-plus-circle me-2"></i>Add Item
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Items Table Card -->
+  <div class="card shadow" *ngIf="showTable">
+    <div class="card-header bg-success text-white">
+      <h2 class="mb-0"><i class="bi bi-list-check me-2"></i>Added Items</h2>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>Item Name</th>
+              <th>Metal Type</th>
+              <th>Weight</th>
+              <th>Purity</th>
+              <th>Price</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of items; let i = index">
+              <td>{{ item.itemName }}</td>
+              <td>{{ item.metalType | titlecase }}</td>
+              <td>{{ item.totalWeight }}g</td>
+              <td>{{ item.karatType }}</td>
+              <td>{{ item.total | currency:'INR' }}</td>
+              <td>
+                <button class="btn btn-danger btn-sm" 
+                        (click)="deleteItem(i)"
+                        title="Remove item">
+                        <fa-icon [icon]="trashIcon"></fa-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col-md-6">
+          <div class="total-card p-3">
+            <h4 class="mb-0">
+              Total Amount: {{ totalAmountInBill | currency:'INR' }}
+            </h4>
+          </div>
+        </div>
+        <div class="col-md-6 d-flex justify-content-end gap-2">
+          <button class="btn btn-secondary" (click)="printBill()">
+            <i class="bi bi-printer me-1"></i>Print Invoice
+          </button>
+          <button class="btn btn-success" (click)="submitInvoice()">
+            <i class="bi bi-check-circle me-1"></i>Submit Invoice
+          </button>
+          <button class="btn btn-warning" (click)="splitBill()">Split Payment</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+ <!-- Payment Modal -->
+ <div class="modal fade" [class.show]="isPaymentModalOpen" 
+ [style.display]="isPaymentModalOpen ? 'block' : 'none'">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+  <div class="modal-header bg-warning">
+    <h3 class="modal-title"><i class="bi bi-cash-coin me-2"></i>Payment Split</h3>
+    <button type="button" class="btn-close" 
+            (click)="closePaymentModal()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="mb-3">
+      <label class="form-label">Payment Method</label>
+      <select class="form-select" [(ngModel)]="paymentMode">
+        <option value="full_cash">Full Cash</option>
+        <option value="upi">UPI Payment</option>
+        <option value="metal_exchange">Metal Exchange</option>
+      </select>
+    </div>
+    
+    <div class="mb-3">
+      <label class="form-label">Amount</label>
+      <div class="input-group">
+        <input type="number" class="form-control" 
+               placeholder="Enter amount to split"
+               [(ngModel)]="amount">
+        <button class="btn btn-primary" (click)="saveAmount()">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+    </div>
+    
+    <div class="alert alert-danger" *ngIf="pendingAmount > 0">
+      <i class="bi bi-exclamation-triangle me-2"></i>
+      Remaining Amount: {{ pendingAmount | currency:'INR' }}
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>

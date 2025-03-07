@@ -1,0 +1,49 @@
+<div class="dashboard-container">
+    <div class="cards-container">
+      <mat-card class="card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>emoji_events</mat-icon>
+          <mat-card-title>Today's Gold Price</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h2>₹{{ goldPrice }} / 10g</h2>
+        </mat-card-content>
+      </mat-card>
+  
+      <mat-card class="card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>schedule</mat-icon>
+          <mat-card-title>Yesterday's Gold Price</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h2>₹{{ yesterdayGoldPrice }} / 10g</h2>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>emoji_events</mat-icon>
+          <mat-card-title>Today's Silver Price</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h2>₹{{ silverPrice }} / 10g</h2>
+        </mat-card-content>
+      </mat-card>
+  
+      <mat-card class="card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>schedule</mat-icon>
+          <mat-card-title>Yesterday's Silver Price</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h2>₹{{ yesterdaySilverPrice }} / 10g</h2>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  
+    <!-- Chart Section -->
+    <div class="chart-container">
+      <canvas id="goldSilverChart"></canvas>
+    </div>
+  </div>
+  

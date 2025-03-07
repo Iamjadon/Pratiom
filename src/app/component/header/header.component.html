@@ -1,0 +1,75 @@
+
+  <!-- HEADER -->
+  <mat-toolbar color="primary" class="toolbar">
+    <button mat-icon-button (click)="sidenav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span class="title">Jewellery Management</span>
+
+    <div fxFlex class="spacer"></div>
+
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item>
+        <mat-icon>person</mat-icon> Profile
+      </button>
+      <button mat-menu-item>
+        <mat-icon>logout</mat-icon> Logout
+      </button>
+    </mat-menu>
+  </mat-toolbar>
+
+  <!-- SIDENAV -->
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #sidenav mode="side" opened>
+      <mat-nav-list>
+        <a mat-list-item routerLink="/dashboard">
+          <mat-icon>dashboard</mat-icon> Dashboard
+        </a>
+
+        <!-- Master Section -->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-icon>settings</mat-icon> Master
+          </mat-expansion-panel-header>
+          <a mat-list-item (click)="openUpdateGoldRateDialog()">Get Update Gold Rate</a>
+
+        </mat-expansion-panel>
+
+        <!-- Transactions with Submenu -->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-icon>sync_alt</mat-icon> Transactions
+          </mat-expansion-panel-header>
+          <a mat-list-item (click)="openSearchSalesRegister()">Sales Register</a>
+          <a mat-list-item routerLink="/salesregister">Search Sales Register</a>
+        </mat-expansion-panel>
+
+        <!-- Reports with Submenu -->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-icon>bar_chart</mat-icon> Reports
+          </mat-expansion-panel-header>
+          <a mat-list-item routerLink="/metals-report">Metals Report</a>
+          <a mat-list-item routerLink="/party-report">Party Wise Report</a>
+        </mat-expansion-panel>
+
+        <a mat-list-item routerLink="/gst">
+          <mat-icon>receipt_long</mat-icon> GST
+        </a>
+
+        <a mat-list-item routerLink="/help">
+          <mat-icon>help_outline</mat-icon> Help
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+
+
+    <mat-sidenav-content class="main-content">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container> 
+

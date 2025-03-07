@@ -1,0 +1,75 @@
+.table-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  color: #3f51b5;
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.search-field {
+  width: 100%;
+  max-width: 400px;
+}
+
+.mat-elevation-z8 {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+}
+
+.summary-row {
+  font-weight: bold;
+  background-color: #e0e0e0;
+}
+
+.summary-label {
+  text-align: right;
+  padding-right: 16px;
+}
+
+/* gst-details.component.css */
+.clickable-row {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.clickable-row:hover {
+  background-color: #f8f9fa;
+}
+
+.page-link {
+  cursor: pointer;
+  min-width: 38px;
+  text-align: center;
+}
+
+.table-hover tbody tr:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.input-group-text {
+  background-color: #fff;
+}
+
+.card-header {
+  padding: 1rem 1.5rem;
+}
+
+.text-muted.small {
+  font-size: 0.85em;
+}

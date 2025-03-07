@@ -1,0 +1,132 @@
+.main {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ece9e6, #ffffff);
+  padding: 20px;
+}
+
+.box {
+  max-width: 1000px;
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.box img {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+
+.card-body {
+  padding: 3rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #333333;
+  margin-bottom: 0.8rem;
+}
+
+p.login {
+  color: #666666;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.user {
+  height: 50px;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  transition: border-color 0.3s ease;
+}
+
+.user:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
+.form-check-label {
+  font-size: 1rem;
+  color: #555555;
+}
+
+.btn-primary {
+  font-size: 1.2rem;
+  padding: 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  background-color: #007bff;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  transform: scale(1.03);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 992px) {
+  .box {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .col-md-5,
+  .col-md-6 {
+    width: 100%;
+  }
+
+  .box img {
+    border-radius: 0;
+    max-height: 280px;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .card-body {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .card-body {
+    padding: 1.5rem;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  .user {
+    height: 45px;
+    font-size: 0.95rem;
+  }
+
+  .btn-primary {
+    font-size: 1rem;
+    padding: 12px;
+  }
+}
